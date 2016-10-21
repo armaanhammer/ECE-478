@@ -1,23 +1,26 @@
 //Pathfinding algorithm
 
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui/highgui.hpp"
 #include <iostream>
+#include <iomanip>
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
 #include <ctime>
 #include <math.h>
+#include <queue>
 
-using namespace cv;
+
 using namespace std;
 
-vector<int> origin;
-vector<int> goal;
 const int MAP_WIDTH = 100;		//horizontal test map size
 const int MAP_HEIGHT = 100;		//vertical test map size
 
+static int closed_node_map[MAP_WIDTH][MAP_HEIGHT]; // map of closed (tried-out) nodes
+static int open_node_map[MAP_WIDTH][MAP_HEIGHT];	// map of open (not-yet-tried) nodes
+static int map[MAP_WIDTH][MAP_HEIGHT];				//n x m
+static int Direction_map[MAP_WIDTH][MAP_HEIGHT];	//map of directionals
+
+//directions
 enum DIRECTION {MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT, TURN_LEFT, TURN_RIGHT, 
 	WALK_STOP, WALK_READY, WALK_SPEED_SLOW, WALK_SPEED_MEDIUM, WALK_SPEED_FAST};
 
@@ -28,23 +31,51 @@ class SearchNode
 public:
 		int NodePosX;	
 		int NodePosY;			// current position of node being searched
+		int level;
+		int priority;
+		
+		//properties stub
+		SearchNode(int xp, int yp, int d, int p)
+		{
+			NodePosX = xp;
+			NodePosY = yp;
+			level = d;
+			priority = p;
+		}
+		int GetPriority() const { return priority; }
+		int GetLevel() const { return level; }
+		int getXPos() const { return NodePosX; }
+		int getYPos() const { return NodePosY; }
 
-		float EstimateDistance(SearchNode &nodegoal);
-		bool IsGoal(SearchNode &nodegoal);
-		bool GetSuccessors(AStarSearch<SearchNode> *astarsearch, SearchNode *parent_node);
-		float GetCost(SearchNode &successor);
 		bool IsSameState(SearchNode &rhs);
-		void PrintNodeInfo();
+		
+		
+		//get priority of nodes
+		void updatePriority(const int & DestX, const int & DestY)
+		{
+			priority = level + estimate(DestX, DestY) * 10;
+		}
+
+		const int & estimate(const int & DestX, const int & DestY) const
+		{
+			static int xd, yd, d;
+			xd = DestX - NodePosX;
+			yd = DestY - NodePosY;
+			//euclidian distance compute
+			d = static_cast<int>(sqrt(xd*xd + yd*yd));
+			return d;
+		}
+		
 };
 
-//simple display of node info
-void SearchNode::PrintNodeInfo()
+// Determine priority (in the priority queue)
+bool operator<(const SearchNode & a, const SearchNode & b)
 {
-	char str[100];
-	sprintf(str, "Node Position : (%d, %d)", NodePosX, NodePosY);
-	cout << str;
+	return a.GetPriority() > b.GetPriority();
 }
 
+
+//search if the state is same
 bool SearchNode::IsSameState(SearchNode &rhs)
 {
 	//same state is when x,y are the same.  
@@ -58,39 +89,95 @@ bool SearchNode::IsSameState(SearchNode &rhs)
 	}
 }
 
-float SearchNode::EstimateDistance(SearchNode &nodegoal)
-{
-	return fabsf(NodePosX - nodegoal.NodePosX) + fabsf(NodePosY - nodegoal.NodePosY);
-}
 
-
-//see if we have reached the end!
-bool SearchNode::IsGoal(SearchNode &nodegoal)
+//the heart and soul of pathfinding.  Takes four arguments, which is simply the start coords, and the
+//goal coords.  
+string PathFinder(const int & StartX, const int & StartY, const int & GoalX, const int & GoalY)
 {
-	if ((NodePosX == nodegoal.NodePosX) && (NodePosY == nodegoal.NodePosY))
+	//make a priority queue
+	static priority_queue<SearchNode> pq[2];
+	static int pqIndex;
+	static SearchNode* N0;
+	static SearchNode* M0;
+	static int i, j, x, y, xdx, ydy;
+	static char c;
+
+	pqIndex = 0;
+
+	//reset node maps
+	for (y = 0; y < MAP_HEIGHT; y++)
 	{
-		return true;
+		for (x = 0; x < MAP_WIDTH; x++)
+		{
+			closed_node_map[x][y] = 0;
+			open_node_map[x][y] = 0;
+		}
 	}
-	return false;
+
+	//create new start node
+	N0 = new SearchNode(StartX, StartY, 0, 0);
+	N0->updatePriority(GoalX, GoalY);
+	pq[pqIndex].push(*N0);
+	open_node_map[StartX][StartY] = N0->GetPriority();
+
+	while (!pq[pqIndex].empty())  //while not empty
+	{
+
+	}
+
 }
+
 
 
 
 int main()
 {
-	unsigned int SearchCount = 0;
-	unsigned int NumSearches = 1;
+	srand(time(NULL));
 
-	while (SearchCount < NumSearches)
+	//build an empty map
+	for (int y = 0; y < MAP_HEIGHT; y++)
 	{
-		//placeholder
-		SearchNode nodeStart;
-		nodeStart.NodePosX = KINECT_DATAX;
-		nodeStart.NodePosY = KINECT_DATAY;
-
-		SearchNode nodeEnd;
-		nodeEnd.NodePosX = KINECT_DATAX;
+		for (int x = 0; x < MAP_WIDTH; x++)
+		{
+			map[x][y] = 0;
+		}
 	}
+
+	//fill map with + pattern
+	for (int x = MAP_WIDTH / 8; x < MAP_WIDTH * 7 / 8; x++)
+	{ 
+		map[x][MAP_WIDTH / 2] = 1;
+	}
+	for (int y = MAP_HEIGHT / 8; y < MAP_HEIGHT * 7 / 8 y++)
+	{
+		map[MAP_WIDTH / 2][y] = 1;
+	}
+
+	// select the start and finish points as we receive from kinect data
+
+	////////////////////////////////////////////////////////////////////
+	
+	
+	cout << "Map Size (X, Y): " << MAP_WIDTH << MAP_HEIGHT << endl;
+
+	// display the map with the route
+	for (int y = 0; y< MAP_HEIGHT; y++)
+	{
+		for (int x = 0; x< MAP_WIDTH; x++)
+			if (map[x][y] == 0)
+				cout << ".";
+			else if (map[x][y] == 1)
+				cout << "O"; //obstacle
+			else if (map[x][y] == 2)
+				cout << "S"; //start
+			else if (map[x][y] == 3)
+				cout << "R"; //route
+			else if (map[x][y] == 4)
+				cout << "F"; //finish
+			cout << endl;
+	}
+
+
 	//program is done when robot reaches the goal point
 }
 
