@@ -20,8 +20,20 @@ static int open_node_map[MAP_WIDTH][MAP_HEIGHT];	// map of open (not-yet-tried) 
 static int map[MAP_WIDTH][MAP_HEIGHT];				//n x m
 static int Direction_map[MAP_WIDTH][MAP_HEIGHT];	//map of directionals
 
+
+//directionals, this is two seperate arrays that contain pairs of directions for each map.  
+//1 means move positive (right / up) 0 means no move, and -1 means negative (left, down)
+//supported directions in order are:  up, diag up right , up, diag up left, left, diag down left, down, diag down right
+
+//****************************************************************************
+//*   \     |   /
+//*   <--  []  -->
+//*   /     |   \
+//****************************************************************************
+static int DirectionX[] = { 1, 1, 0,-1,-1,-1, 0, 1 };
+static int DirectionY[] = { 0, 1, 1, 1, 0,-1,-1,-1 };
 //directions
-enum DIRECTION {MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT, TURN_LEFT, TURN_RIGHT, 
+enum DIRECTION_COMMAND {MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT, TURN_LEFT, TURN_RIGHT, 
 	WALK_STOP, WALK_READY, WALK_SPEED_SLOW, WALK_SPEED_MEDIUM, WALK_SPEED_FAST};
 
 
@@ -91,14 +103,14 @@ bool SearchNode::IsSameState(SearchNode &rhs)
 
 
 //the heart and soul of pathfinding.  Takes four arguments, which is simply the start coords, and the
-//goal coords.  
+//goal coords.  returns string/ map of directionals as the route 
 string PathFinder(const int & StartX, const int & StartY, const int & GoalX, const int & GoalY)
 {
 	//make a priority queue
 	static priority_queue<SearchNode> pq[2];
 	static int pqIndex;
-	static SearchNode* N0;
-	static SearchNode* M0;
+	static SearchNode* N0;			//node for Width  X
+	static SearchNode* M0;			//node for height Y
 	static int i, j, x, y, xdx, ydy;
 	static char c;
 
@@ -122,6 +134,43 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 
 	while (!pq[pqIndex].empty())  //while not empty
 	{
+		//construct a new node 
+		N0 = new SearchNode(pq[pqIndex].top().getXPos(), pq[pqIndex].top().getYPos,
+			pq[pqIndex].top().GetLevel(), pq[pqIndex].top().GetPriority());
+
+		x = N0->getXPos();
+		y = N0->getYPos();
+
+		pq[pqIndex].pop();		//remove node from open list
+		open_node_map[x][y] = 0;
+								//mark it on closed map
+		closed_node_map[x][y] = 1;
+
+		//terminate search when goal is reached
+		if (x == GoalX && y == GoalY)
+		{
+			string path = "";
+			while (!(x == StartX && y == StartY))
+			{
+				j = Direction_map[x][y];
+				c = '0' + (j + direction / 2) % direction;
+				path = c + path;
+				x += DirectionX[j];
+				y += DirectionY[j];
+
+
+			}
+
+			delete N0;
+			//empty leftovers
+			while (!pq[pqIndex].empty()) pq[pqIndex].pop();
+			return path;
+		}
+
+
+		//generate moves for child
+
+
 
 	}
 
