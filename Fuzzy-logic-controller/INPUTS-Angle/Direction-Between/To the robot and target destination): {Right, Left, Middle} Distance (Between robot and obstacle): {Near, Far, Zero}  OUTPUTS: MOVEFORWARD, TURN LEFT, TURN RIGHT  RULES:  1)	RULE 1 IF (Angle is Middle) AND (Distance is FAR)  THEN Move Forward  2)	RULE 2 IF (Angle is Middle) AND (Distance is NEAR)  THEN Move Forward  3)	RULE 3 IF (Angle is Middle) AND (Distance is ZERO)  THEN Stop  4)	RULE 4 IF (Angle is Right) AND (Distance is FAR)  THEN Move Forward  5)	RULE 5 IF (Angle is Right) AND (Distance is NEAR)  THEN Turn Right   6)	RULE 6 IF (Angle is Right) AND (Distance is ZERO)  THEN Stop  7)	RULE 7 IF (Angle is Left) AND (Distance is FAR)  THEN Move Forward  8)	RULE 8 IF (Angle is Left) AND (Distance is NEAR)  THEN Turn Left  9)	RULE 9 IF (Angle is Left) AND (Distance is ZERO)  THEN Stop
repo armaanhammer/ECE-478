@@ -1,0 +1,44 @@
+INPUTS: 
+Angle/Direction (Between/To the robot and target destination): {Right, Left, Middle}
+Distance (Between robot and obstacle): {Near, Far, Zero}
+
+OUTPUTS:
+MOVEFORWARD, TURN LEFT, TURN RIGHT
+
+RULES:
+1)	RULE 1
+IF (Angle is Middle) AND (Distance is FAR) 
+THEN Move Forward
+
+2)	RULE 2
+IF (Angle is Middle) AND (Distance is NEAR) 
+THEN Move Forward
+
+3)	RULE 3
+IF (Angle is Middle) AND (Distance is ZERO) 
+THEN Stop
+
+4)	RULE 4
+IF (Angle is Right) AND (Distance is FAR) 
+THEN Move Forward
+
+5)	RULE 5
+IF (Angle is Right) AND (Distance is NEAR) 
+THEN Turn Right 
+
+6)	RULE 6
+IF (Angle is Right) AND (Distance is ZERO) 
+THEN Stop
+
+7)	RULE 7
+IF (Angle is Left) AND (Distance is FAR) 
+THEN Move Forward
+
+8)	RULE 8
+IF (Angle is Left) AND (Distance is NEAR) 
+THEN Turn Left
+
+9)	RULE 9
+IF (Angle is Left) AND (Distance is ZERO) 
+THEN Stop
+
