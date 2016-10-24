@@ -14,6 +14,7 @@ using namespace std;
 
 const int MAP_WIDTH = 100;		//horizontal test map size
 const int MAP_HEIGHT = 100;		//vertical test map size
+const int Direction = 8;		//number of directions we can travel in
 
 static int closed_node_map[MAP_WIDTH][MAP_HEIGHT]; // map of closed (tried-out) nodes
 static int open_node_map[MAP_WIDTH][MAP_HEIGHT];	// map of open (not-yet-tried) nodes
@@ -32,7 +33,8 @@ static int Direction_map[MAP_WIDTH][MAP_HEIGHT];	//map of directionals
 //****************************************************************************
 static int DirectionX[] = { 1, 1, 0,-1,-1,-1, 0, 1 };
 static int DirectionY[] = { 0, 1, 1, 1, 0,-1,-1,-1 };
-//directions
+
+//directions to commands
 enum DIRECTION_COMMAND {MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT, TURN_LEFT, TURN_RIGHT, 
 	WALK_STOP, WALK_READY, WALK_SPEED_SLOW, WALK_SPEED_MEDIUM, WALK_SPEED_FAST};
 
@@ -41,9 +43,9 @@ enum DIRECTION_COMMAND {MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT, TURN_LEF
 class SearchNode
 {
 public:
-		int NodePosX;	
+		int NodePosX;			//current position of node in X
 		int NodePosY;			// current position of node being searched
-		int level;
+		int level;				//distance traveled to reach node
 		int priority;
 		
 		//properties stub
@@ -59,13 +61,16 @@ public:
 		int getXPos() const { return NodePosX; }
 		int getYPos() const { return NodePosY; }
 
-		bool IsSameState(SearchNode &rhs);
-		
 		
 		//get priority of nodes
 		void updatePriority(const int & DestX, const int & DestY)
 		{
 			priority = level + estimate(DestX, DestY) * 10;
+		}
+
+		void nextLevel(const int & i) // i: direction
+		{
+			level += (Direction == 8 ? (i % 2 == 0 ? 10 : 14) : 10);
 		}
 
 		const int & estimate(const int & DestX, const int & DestY) const
@@ -84,21 +89,6 @@ public:
 bool operator<(const SearchNode & a, const SearchNode & b)
 {
 	return a.GetPriority() > b.GetPriority();
-}
-
-
-//search if the state is same
-bool SearchNode::IsSameState(SearchNode &rhs)
-{
-	//same state is when x,y are the same.  
-	if ((NodePosX == rhs.NodePosX) && (NodePosY == rhs.NodePosY))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
 
 
@@ -134,17 +124,16 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 
 	while (!pq[pqIndex].empty())  //while not empty
 	{
-		//construct a new node 
+		//construct a new node begin searching!
 		N0 = new SearchNode(pq[pqIndex].top().getXPos(), pq[pqIndex].top().getYPos,
 			pq[pqIndex].top().GetLevel(), pq[pqIndex].top().GetPriority());
 
 		x = N0->getXPos();
 		y = N0->getYPos();
 
-		pq[pqIndex].pop();		//remove node from open list
+		pq[pqIndex].pop();													//remove node from open list
 		open_node_map[x][y] = 0;
-								//mark it on closed map
-		closed_node_map[x][y] = 1;
+		closed_node_map[x][y] = 1;											//mark it on closed map
 
 		//terminate search when goal is reached
 		if (x == GoalX && y == GoalY)
@@ -153,11 +142,10 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 			while (!(x == StartX && y == StartY))
 			{
 				j = Direction_map[x][y];
-				c = '0' + (j + direction / 2) % direction;
+				c = '0' + (j + Direction / 2) % Direction;
 				path = c + path;
 				x += DirectionX[j];
 				y += DirectionY[j];
-
 
 			}
 
@@ -168,12 +156,69 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 		}
 
 
-		//generate moves for child
+		//generate moves for child in all possible directions
+		for (i = 0; i < Direction; i++)
+		{
+			xdx = x + DirectionX[i];
+			ydy = y + DirectionY[i];
 
+			//generate edge cases, like if its on edge of map
+			//like x is negative (not allowed, x is out of bounds, or map is 1, or closed map is 1
+			if (!(xdx < 0 || xdx > MAP_WIDTH - 1 || ydy < 0 || ydy > MAP_HEIGHT - 1 || map[xdx][ydy] == 1 || closed_node_map[xdx][ydy] == 1))
+			{
+				M0 = new SearchNode(xdx, ydy, N0->GetLevel(), N0->GetPriority());
+				M0->nextLevel(i);															//i is direction
+				M0->updatePriority(GoalX, GoalY);
 
+				//if not in open list add to it
+				if (open_node_map[xdx][ydy] == 0)
+				{
+					open_node_map[xdx][ydy] = M0->GetPriority();
+					pq[pqIndex].push(*M0);
+
+					Direction_map[xdx][ydy] = (i + Direction / 2) % Direction;
+				}
+				else if (open_node_map[xdx][ydy] > M0->GetPriority())
+				{
+					//update priority info
+					open_node_map[xdx][ydy] = M0->GetPriority();
+					//update parent direction info
+					Direction_map[xdx][ydy] = (i + Direction / 2) % Direction;
+
+					// replace the node
+					// by emptying one pq to the other one
+					// except the node to be replaced will be ignored
+					// and the new node will be pushed in instead
+					while (!(pq[pqIndex].top().getXPos() == xdx &&
+						pq[pqIndex].top().getYPos() == ydy))
+					{
+						pq[1 - pqIndex].push(pq[pqIndex].top());
+						pq[pqIndex].pop();
+					}
+					pq[pqIndex].pop();
+
+					//empty the larger size pq to smaller one
+					if (pq[pqIndex].size() > pq[1 - pqIndex].size())
+					{
+						pqIndex = 1 - pqIndex;
+					}
+					while (!pq[pqIndex].empty())
+					{
+						pq[1 - pqIndex].push(pq[pqIndex].top());
+						pq[pqIndex].pop();
+					}
+					pqIndex = 1 - pqIndex;
+					pq[pqIndex].push(*M0);
+
+				}
+				delete M0;
+			}
+
+		}
+		delete N0;
 
 	}
-
+	return "";			//no route found
 }
 
 
@@ -197,13 +242,25 @@ int main()
 	{ 
 		map[x][MAP_WIDTH / 2] = 1;
 	}
-	for (int y = MAP_HEIGHT / 8; y < MAP_HEIGHT * 7 / 8 y++)
+	for (int y = MAP_HEIGHT / 8; y < MAP_HEIGHT * 7 / 8; y++)
 	{
 		map[MAP_WIDTH / 2][y] = 1;
 	}
 
 	// select the start and finish points as we receive from kinect data
-
+	// randomly select start and finish locations
+	int xA, yA, xB, yB;
+	switch (rand() % 8)
+	{
+	case 0: xA = 0; yA = 0; xB = n - 1; yB = m - 1; break;
+	case 1: xA = 0; yA = m - 1; xB = n - 1; yB = 0; break;
+	case 2: xA = n / 2 - 1; yA = m / 2 - 1; xB = n / 2 + 1; yB = m / 2 + 1; break;
+	case 3: xA = n / 2 - 1; yA = m / 2 + 1; xB = n / 2 + 1; yB = m / 2 - 1; break;
+	case 4: xA = n / 2 - 1; yA = 0; xB = n / 2 + 1; yB = m - 1; break;
+	case 5: xA = n / 2 + 1; yA = m - 1; xB = n / 2 - 1; yB = 0; break;
+	case 6: xA = 0; yA = m / 2 - 1; xB = n - 1; yB = m / 2 + 1; break;
+	case 7: xA = n - 1; yA = m / 2 + 1; xB = 0; yB = m / 2 - 1; break;
+	}
 	////////////////////////////////////////////////////////////////////
 	
 	
