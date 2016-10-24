@@ -135,7 +135,8 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 		open_node_map[x][y] = 0;
 		closed_node_map[x][y] = 1;											//mark it on closed map
 
-		//terminate search when goal is reached
+		//terminate search when goal is reached, condition checks and produces output.
+		//of directionals
 		if (x == GoalX && y == GoalY)
 		{
 			string path = "";
@@ -265,8 +266,44 @@ int main()
 	
 	
 	cout << "Map Size (X, Y): " << MAP_WIDTH << MAP_HEIGHT << endl;
+	cout << "Start: " << xA << yA << endl;
+	cout << "Finish: " << xB << yB << endl;
 
-	// display the map with the route
+	//obtain route, run clock and start pathfinder alg.  Algorithm is run
+	
+	clock_t start = clock();
+	
+	//send in the coords of start and finish, which is randomly generated for now.  
+	//we can change this to reflect kinect values!
+	string route = PathFinder(xA, yA, xB, yB);
+	if (route == "");
+		cout << "Empty Rout generated" << endl;
+	
+	clock_t end = clock();
+	double time_elapsed = double(end - start);
+	cout << "Time to calculate route (ms): " << time_elapsed << endl;
+	cout << "Route: " << endl;
+	cout <<route<< endl;
+
+
+	//follow route and display it
+	if (route.length() > 0)
+	{
+		int i; char c;
+		int x = xA;
+		int y = yA;
+		map[x][y] = 2;		//basically set the start coordinates, 2 is the marker.
+		for (int i = 0; i < route.length(); i++)
+		{
+			c = route.at(i);
+			j = c - '0';
+			x = x + DirectionX[j];
+			y = y + DirectionY[j];
+			map[x][y] = 3;		//3 is marker for ROUTE
+		}
+
+	}
+	// display the map with the route, iterate through matrix
 	for (int y = 0; y< MAP_HEIGHT; y++)
 	{
 		for (int x = 0; x< MAP_WIDTH; x++)
@@ -282,7 +319,8 @@ int main()
 				cout << "F"; //finish
 			cout << endl;
 	}
-
+	getchar();				//wait for enter keypress
+	return(0);
 
 	//program is done when robot reaches the goal point
 }
