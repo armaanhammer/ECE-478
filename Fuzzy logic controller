@@ -1,9 +1,12 @@
 INPUTS: 
-Angle/Direction (Between/To the robot and target destination): {Right, Left, Middle}
-Distance (Between robot and obstacle): {Near, Far, Zero}
+Angle/Direction (Between/To the robot and target destination): {Right, Somewhat Right, Left, Somewhat Left, Middle}
+                                                               {R, SR, L, SL, M}
+Distance (Between robot and obstacle): {Near, Somewhat Near, Far, Somewhat Far, Zero}
+                                       {N, SN, F, SF, Z}
 
 OUTPUTS:
-MOVEFORWARD, TURN LEFT, TURN RIGHT
+{MOVEFORWARD, TURN LEFT, TURN RIGHT, SLOW DOWN}
+{MF, TL, TR, SD}
 
 RULES:
 
