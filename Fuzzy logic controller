@@ -1,9 +1,8 @@
 INPUTS: 
+Distance (Between robot and obstacle): {Zero, Very Close, Close,, Far, Very Far}
+                                       {Z, VC, C, F, VF}
 Angle/Direction (Between/To the robot and target destination): {Right, Left, Middle}
                                                                {R, L, M}
-Distance (Between robot and obstacle): {Near, Far, Zero}
-                                       {N, F, Z}
-
 OUTPUTS:
 {MOVEFORWARD, TURN LEFT, TURN RIGHT, STOP, SLOW DOWN}
 {MF, TL, TR, S}
@@ -15,7 +14,7 @@ IF (Angle is Middle) AND (Distance is FAR)
 THEN Move Forward
 
 2)	RULE 2
-IF (Angle is Middle) AND (Distance is NEAR) 
+IF (Angle is Middle) AND (Distance is CLOSE) 
 THEN SLOW DOWN
 
 3)	RULE 3
@@ -23,26 +22,50 @@ IF (Angle is Middle) AND (Distance is ZERO)
 THEN Stop
 
 4)	RULE 4
-IF (Angle is Right) AND (Distance is FAR) 
-THEN Move Forward
+IF (Angle is Middle) AND (Distance is VERY FAR) 
+THEN MOVE FORWARD
 
 5)	RULE 5
-IF (Angle is Right) AND (Distance is NEAR) 
-THEN SLOW DOWN 
-
-6)	RULE 6
-IF (Angle is Right) AND (Distance is ZERO) 
-THEN TURN LEFT
-
-7)	RULE 7
-IF (Angle is Left) AND (Distance is FAR) 
-THEN Move Forward
-
-8)	RULE 8
-IF (Angle is Left) AND (Distance is NEAR) 
+IF (Angle is Middle) AND (Distance is VERY CLOSE) 
 THEN SLOW DOWN
 
-9)	RULE 9
-IF (Angle is Left) AND (Distance is ZERO) 
-THEN TURN RIGHT
 
+6)	RULE 6
+IF (Angle is Right) AND (Distance is FAR) 
+THEN MOVE FORWARD
+
+7)	RULE 7
+IF (Angle is Right) AND (Distance is CLOSE) 
+THEN SLOW DOWN 
+
+8)	RULE 8
+IF (Angle is Right) AND (Distance is ZERO) 
+THEN STOP
+
+9)	RULE 9
+IF (Angle is Right) AND (Distance is VERY FAR) 
+THEN MOVE FORWARD
+
+10)	RULE 10
+IF (Angle is Right) AND (Distance is VERY CLOSE) 
+THEN TURN LEFT
+
+11)	RULE 11
+IF (Angle is Left) AND (Distance is FAR) 
+THEN MOVE FORWARD
+
+12)	RULE 12
+IF (Angle is Left) AND (Distance is CLOSE) 
+THEN SLOW DOWN
+
+14)	RULE 13
+IF (Angle is Left) AND (Distance is ZERO) 
+THEN STOP
+
+15)	RULE 15
+IF (Angle is Left) AND (Distance is VERY FAR) 
+THEN MOVE FORWARD
+
+16)	RULE 16
+IF (Angle is Left) AND (Distance is VERY CLOSE) 
+THEN SLOW DOWN
