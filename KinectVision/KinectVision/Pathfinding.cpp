@@ -8,6 +8,8 @@
 #include <ctime>
 #include <math.h>
 #include <queue>
+#include <string>
+
 
 
 using namespace std;
@@ -42,12 +44,12 @@ enum DIRECTION_COMMAND {MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT, TURN_LEF
 
 class SearchNode
 {
-public:
+
 		int NodePosX;			//current position of node in X
 		int NodePosY;			// current position of node being searched
 		int level;				//distance traveled to reach node
 		int priority;
-		
+public:
 		//properties stub
 		SearchNode(int xp, int yp, int d, int p)
 		{
@@ -125,8 +127,7 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 	while (!pq[pqIndex].empty())  //while not empty
 	{
 		//construct a new node begin searching!
-		N0 = new SearchNode(pq[pqIndex].top().getXPos(), pq[pqIndex].top().getYPos,
-			pq[pqIndex].top().GetLevel(), pq[pqIndex].top().GetPriority());
+		N0 = new SearchNode(pq[pqIndex].top().getXPos(), pq[pqIndex].top().getYPos(), pq[pqIndex].top().GetLevel(), pq[pqIndex].top().GetPriority());
 
 		x = N0->getXPos();
 		y = N0->getYPos();
@@ -253,14 +254,14 @@ int main()
 	int xA, yA, xB, yB;
 	switch (rand() % 8)
 	{
-	case 0: xA = 0; yA = 0; xB = n - 1; yB = m - 1; break;
-	case 1: xA = 0; yA = m - 1; xB = n - 1; yB = 0; break;
-	case 2: xA = n / 2 - 1; yA = m / 2 - 1; xB = n / 2 + 1; yB = m / 2 + 1; break;
-	case 3: xA = n / 2 - 1; yA = m / 2 + 1; xB = n / 2 + 1; yB = m / 2 - 1; break;
-	case 4: xA = n / 2 - 1; yA = 0; xB = n / 2 + 1; yB = m - 1; break;
-	case 5: xA = n / 2 + 1; yA = m - 1; xB = n / 2 - 1; yB = 0; break;
-	case 6: xA = 0; yA = m / 2 - 1; xB = n - 1; yB = m / 2 + 1; break;
-	case 7: xA = n - 1; yA = m / 2 + 1; xB = 0; yB = m / 2 - 1; break;
+	case 0: xA = 0; yA = 0; xB = MAP_WIDTH - 1; yB = MAP_HEIGHT - 1; break;
+	case 1: xA = 0; yA = MAP_HEIGHT - 1; xB = MAP_WIDTH - 1; yB = 0; break;
+	case 2: xA = MAP_WIDTH / 2 - 1; yA = MAP_HEIGHT / 2 - 1; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT / 2 + 1; break;
+	case 3: xA = MAP_WIDTH / 2 - 1; yA = MAP_HEIGHT / 2 + 1; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT / 2 - 1; break;
+	case 4: xA = MAP_WIDTH / 2 - 1; yA = 0; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT - 1; break;
+	case 5: xA = MAP_WIDTH / 2 + 1; yA = MAP_HEIGHT - 1; xB = MAP_WIDTH / 2 - 1; yB = 0; break;
+	case 6: xA = 0; yA = MAP_HEIGHT / 2 - 1; xB = MAP_WIDTH - 1; yB = MAP_HEIGHT / 2 + 1; break;
+	case 7: xA = MAP_WIDTH - 1; yA = MAP_HEIGHT / 2 + 1; xB = 0; yB = MAP_HEIGHT / 2 - 1; break;
 	}
 	////////////////////////////////////////////////////////////////////
 	
@@ -276,20 +277,19 @@ int main()
 	//send in the coords of start and finish, which is randomly generated for now.  
 	//we can change this to reflect kinect values!
 	string route = PathFinder(xA, yA, xB, yB);
-	if (route == "");
+	if (route == "")
 		cout << "Empty Rout generated" << endl;
 	
 	clock_t end = clock();
 	double time_elapsed = double(end - start);
 	cout << "Time to calculate route (ms): " << time_elapsed << endl;
-	cout << "Route: " << endl;
-	cout <<route<< endl;
+	cout << "Route: " << route << endl;
 
 
 	//follow route and display it
 	if (route.length() > 0)
 	{
-		int i; char c;
+		int j; char c;
 		int x = xA;
 		int y = yA;
 		map[x][y] = 2;		//basically set the start coordinates, 2 is the marker.
