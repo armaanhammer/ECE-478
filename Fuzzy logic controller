@@ -1,12 +1,12 @@
 INPUTS: 
-Angle/Direction (Between/To the robot and target destination): {Right, Somewhat Right, Left, Somewhat Left, Middle}
-                                                               {R, SR, L, SL, M}
-Distance (Between robot and obstacle): {Near, Somewhat Near, Far, Somewhat Far, Zero}
-                                       {N, SN, F, SF, Z}
+Angle/Direction (Between/To the robot and target destination): {Right, Left, Middle}
+                                                               {R, L, M}
+Distance (Between robot and obstacle): {Near, Far, Zero}
+                                       {N, F, Z}
 
 OUTPUTS:
-{MOVEFORWARD, TURN LEFT, TURN RIGHT, SLOW DOWN}
-{MF, TL, TR, SD}
+{MOVEFORWARD, TURN LEFT, TURN RIGHT, STOP, SLOW DOWN}
+{MF, TL, TR, S}
 
 RULES:
 
@@ -16,7 +16,7 @@ THEN Move Forward
 
 2)	RULE 2
 IF (Angle is Middle) AND (Distance is NEAR) 
-THEN Move Forward
+THEN SLOW DOWN
 
 3)	RULE 3
 IF (Angle is Middle) AND (Distance is ZERO) 
@@ -28,11 +28,11 @@ THEN Move Forward
 
 5)	RULE 5
 IF (Angle is Right) AND (Distance is NEAR) 
-THEN Turn Right 
+THEN SLOW DOWN 
 
 6)	RULE 6
 IF (Angle is Right) AND (Distance is ZERO) 
-THEN Stop
+THEN TURN LEFT
 
 7)	RULE 7
 IF (Angle is Left) AND (Distance is FAR) 
@@ -40,9 +40,9 @@ THEN Move Forward
 
 8)	RULE 8
 IF (Angle is Left) AND (Distance is NEAR) 
-THEN Turn Left
+THEN SLOW DOWN
 
 9)	RULE 9
 IF (Angle is Left) AND (Distance is ZERO) 
-THEN Stop
+THEN TURN RIGHT
 
