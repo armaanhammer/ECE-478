@@ -11,7 +11,6 @@
 #include <string>
 
 
-
 using namespace std;
 
 const int MAP_WIDTH = 100;		//horizontal test map size
@@ -44,13 +43,11 @@ enum DIRECTION_COMMAND {MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT, TURN_LEF
 
 class SearchNode
 {
-
 		int NodePosX;			//current position of node in X
 		int NodePosY;			// current position of node being searched
 		int level;				//distance traveled to reach node
-		int priority;
+		int priority;			//the priority of node
 public:
-		//properties stub
 		SearchNode(int xp, int yp, int d, int p)
 		{
 			NodePosX = xp;
@@ -239,14 +236,14 @@ int main()
 		}
 	}
 
-	//fill map with + pattern
+	//fill map with obstacle pattern
 	for (int x = MAP_WIDTH / 8; x < MAP_WIDTH * 7 / 8; x++)
 	{ 
-		map[x][MAP_WIDTH / 2] = 1;
+		map[x][MAP_WIDTH / 2] = 1;									//populate obstacle
 	}
 	for (int y = MAP_HEIGHT / 8; y < MAP_HEIGHT * 7 / 8; y++)
 	{
-		map[MAP_WIDTH / 2][y] = 1;
+		map[MAP_WIDTH / 2][y] = 1;									//populate obstacle
 	}
 
 	// select the start and finish points as we receive from kinect data
@@ -267,8 +264,8 @@ int main()
 	
 	
 	cout << "Map Size (X, Y): " << MAP_WIDTH << MAP_HEIGHT << endl;
-	cout << "Start: " << xA << yA << endl;
-	cout << "Finish: " << xB << yB << endl;
+	cout << "Start: " << xA <<"," << yA << endl;
+	cout << "Finish: " << xB << "," << yB << endl;
 
 	//obtain route, run clock and start pathfinder alg.  Algorithm is run
 	
@@ -278,7 +275,7 @@ int main()
 	//we can change this to reflect kinect values!
 	string route = PathFinder(xA, yA, xB, yB);
 	if (route == "")
-		cout << "Empty Rout generated" << endl;
+		cout << "Empty Route generated" << endl;
 	
 	clock_t end = clock();
 	double time_elapsed = double(end - start);
@@ -301,9 +298,10 @@ int main()
 			y = y + DirectionY[j];
 			map[x][y] = 3;		//3 is marker for ROUTE
 		}
-
+		map[x][y] = 4;			//mark finish
 	}
 	// display the map with the route, iterate through matrix
+	// 0 is blank, 1 is obstacle, 2 is start, 3 is route, 4 is finish
 	for (int y = 0; y< MAP_HEIGHT; y++)
 	{
 		for (int x = 0; x< MAP_WIDTH; x++)
