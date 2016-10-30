@@ -274,7 +274,7 @@ int main()
 }
 
 //take in Vectors to draw, perhaps the argument feed should be a list of 4 vertices
-void DrawObstacle( list<tuple <int, int>> VerticePairs)
+void DrawObstacle(list<tuple <int, int>> VerticePairs)
 {
 	//build an empty map
 	for (int y = 0; y < MAP_HEIGHT; y++)
@@ -285,9 +285,35 @@ void DrawObstacle( list<tuple <int, int>> VerticePairs)
 		}
 	}
 
-	//take vector vertices
-	//sort 
+	int A [2] = { 30, 45 };
+	int B [2] = { 70, 45 };
+	int C [2] = { 70, 35 };
+	int D [2] = { 30, 35 };
 
+	//if the Y coords are the same for two poinbts, draw a line between em
+	if (A[1] == B[1])
+	{
+		for (int i = A[0]; i <= B[0]; i++)
+		{ map[i][A[1]] = 1; }
+
+	}
+	if (B[0] == C[0])
+	{
+		for (int i = B[1]; i >= C[1]; i--)		
+		{ map[B[0]][i] = 1;	}
+	}
+	
+	if (C[1] == D[1])
+	{
+		for (int i = C[0]; i >= D[0]; i--)
+		{ map[i][C[1]] = 1; }
+	}
+
+	if (A[0] == D[0])
+	{
+		for (int i = D[1]; i <= A[1]; i++)
+		{ map[D[0]][i] = 1 ; }
+	}
 }
 
 void DrawMap(string route, int xA, int yA)
