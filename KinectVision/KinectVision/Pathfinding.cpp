@@ -9,7 +9,8 @@
 #include <math.h>
 #include <queue>
 #include <string>
-
+#include <tuple>
+#include <list>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ static int closed_node_map[MAP_WIDTH][MAP_HEIGHT]; // map of closed (tried-out) 
 static int open_node_map[MAP_WIDTH][MAP_HEIGHT];	// map of open (not-yet-tried) nodes
 static int map[MAP_WIDTH][MAP_HEIGHT];				//n x m
 static int Direction_map[MAP_WIDTH][MAP_HEIGHT];	//map of directionals
+
 
 
 //directionals, this is two seperate arrays that contain pairs of directions for each map.  
@@ -220,31 +222,15 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 	return "";			//no route found
 }
 
-
-
+//prototypes
+void DrawObstacle(list <tuple<int,int>> VerticePairs);
+void DrawMap(string, int, int);
 
 int main()
 {
-	srand(time(NULL));
-
-	//build an empty map
-	for (int y = 0; y < MAP_HEIGHT; y++)
-	{
-		for (int x = 0; x < MAP_WIDTH; x++)
-		{
-			map[x][y] = 0;
-		}
-	}
-
-	//fill map with obstacle pattern
-	for (int x = MAP_WIDTH / 8; x < MAP_WIDTH * 7 / 8; x++)
-	{ 
-		map[x][MAP_WIDTH / 2] = 1;									//populate obstacle
-	}
-	for (int y = MAP_HEIGHT / 8; y < MAP_HEIGHT * 7 / 8; y++)
-	{
-		map[MAP_WIDTH / 2][y] = 1;									//populate obstacle
-	}
+	list<tuple <int, int>> VerticePairs = { make_tuple(30,45), make_tuple(50,45), make_tuple(50,35), make_tuple(30,35) };		//tuples
+	
+	DrawObstacle(VerticePairs);
 
 	// select the start and finish points as we receive from kinect data
 	// randomly select start and finish locations
@@ -262,27 +248,50 @@ int main()
 	}
 	////////////////////////////////////////////////////////////////////
 	
-	
+	srand(time(NULL));
 	cout << "Map Size (X, Y): " << MAP_WIDTH << MAP_HEIGHT << endl;
 	cout << "Start: " << xA <<"," << yA << endl;
 	cout << "Finish: " << xB << "," << yB << endl;
 
 	//obtain route, run clock and start pathfinder alg.  Algorithm is run
-	
-	clock_t start = clock();
-	
 	//send in the coords of start and finish, which is randomly generated for now.  
 	//we can change this to reflect kinect values!
+	
+	clock_t start = clock();
 	string route = PathFinder(xA, yA, xB, yB);
 	if (route == "")
 		cout << "Empty Route generated" << endl;
-	
 	clock_t end = clock();
 	double time_elapsed = double(end - start);
 	cout << "Time to calculate route (ms): " << time_elapsed << endl;
 	cout << "Route: " << route << endl;
 
+	//run the drawMap function
+	DrawMap(route, xA, yA);
+	
+	getchar();				//wait for enter keypress
+	return(0);				//program is done when robot reaches the goal point
+}
 
+//take in Vectors to draw, perhaps the argument feed should be a list of 4 vertices
+void DrawObstacle( list<tuple <int, int>> VerticePairs)
+{
+	//build an empty map
+	for (int y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (int x = 0; x < MAP_WIDTH; x++)
+		{
+			map[x][y] = 0;
+		}
+	}
+
+	//take vector vertices
+	//sort 
+
+}
+
+void DrawMap(string route, int xA, int yA)
+{
 	//follow route and display it
 	if (route.length() > 0)
 	{
@@ -317,12 +326,4 @@ int main()
 				cout << "F"; //finish
 			cout << endl;
 	}
-	getchar();				//wait for enter keypress
-	return(0);
-
-	//program is done when robot reaches the goal point
 }
-
-
-
-
