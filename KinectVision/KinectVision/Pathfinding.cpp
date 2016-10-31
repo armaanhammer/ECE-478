@@ -11,6 +11,7 @@
 #include <string>
 #include <tuple>
 #include <list>
+#include <iterator>
 
 using namespace std;
 
@@ -223,14 +224,24 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 }
 
 //prototypes
-void DrawObstacle(list <tuple<int,int>> VerticePairs);
+void DrawObstacle(int [], int []);
 void DrawMap(string, int, int);
 
 int main()
 {
-	list<tuple <int, int>> VerticePairs = { make_tuple(30,45), make_tuple(50,45), make_tuple(50,35), make_tuple(30,35) };		//tuples
-	
-	DrawObstacle(VerticePairs);
+	//build an empty map
+	for (int y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (int x = 0; x < MAP_WIDTH; x++)
+		{
+			map[x][y] = 0;
+		}
+	}
+
+	int ObsX[4] = {30, 50, 50, 30};
+	int ObsY[4] = {45, 45, 35, 35};
+
+	DrawObstacle(ObsX, ObsY);
 
 	// select the start and finish points as we receive from kinect data
 	// randomly select start and finish locations
@@ -273,23 +284,16 @@ int main()
 	return(0);				//program is done when robot reaches the goal point
 }
 
-//take in Vectors to draw, perhaps the argument feed should be a list of 4 vertices
-void DrawObstacle(list<tuple <int, int>> VerticePairs)
+//take in Vectors to draw, perhaps the argument feed should be a list of 4 vertices list<tuple <int, int>> VerticePairs
+void DrawObstacle(int xOb[], int yOb[])
 {
-	//build an empty map
-	for (int y = 0; y < MAP_HEIGHT; y++)
-	{
-		for (int x = 0; x < MAP_WIDTH; x++)
-		{
-			map[x][y] = 0;
-		}
-	}
-
-	int A [2] = { 30, 45 };
-	int B [2] = { 70, 45 };
-	int C [2] = { 70, 35 };
-	int D [2] = { 30, 35 };
-
+	
+	
+	//map given arrays to coords of obstacles
+	int A[2] = { xOb[0], yOb[0] };
+	int B[2] = { xOb[1], yOb[1] };
+	int C[2] = { xOb[2], yOb[2] };
+	int D[2] = { xOb[3], yOb[3] };
 	//if the Y coords are the same for two poinbts, draw a line between em
 	if (A[1] == B[1])
 	{
