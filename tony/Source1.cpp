@@ -159,8 +159,9 @@ void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) 
 	for (int i = 0; i< contours.size(); i++)
 	{
 		//Scalar color = Scalar(0, 255, 0), 2);
-		drawContours(drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point());
-		//rectangle(drawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0);;
+		//drawContours(cameraFeed, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point());
+		rectangle(cameraFeed, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 2, 8, 0);
+		//circle( drawing, center[i], (int)radius[i], color, 2, 8, 0 );
 	}
  }
 /*
