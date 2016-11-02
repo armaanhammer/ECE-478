@@ -224,69 +224,73 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 //prototypes
 void DrawObstacle(int [], int []);
 void DrawMap(string, int, int);
+void DrawCircle(int, int, int);
 
 int main()
 {
-	//build an empty map
-	for (int y = 0; y < MAP_HEIGHT; y++)
+//build an empty map
+for (int y = 0; y < MAP_HEIGHT; y++)
+{
+	for (int x = 0; x < MAP_WIDTH; x++)
 	{
-		for (int x = 0; x < MAP_WIDTH; x++)
-		{
-			map[x][y] = 0;
-		}
+		map[x][y] = 0;
 	}
+}
 
-	int ObsX[4] = {30, 50, 50, 30};
-	int ObsY[4] = {45, 45, 35, 35};
+int ObsX[4] = { 30, 75, 75, 30 };
+int ObsY[4] = { 45, 45, 35, 35 };
 
-	DrawObstacle(ObsX, ObsY);
+//DrawObstacle(ObsX, ObsY);
+DrawCircle(50, 50, 25);
 
-	// select the start and finish points as we receive from kinect data
-	// randomly select start and finish locations
-	int xA, yA, xB, yB;
-	switch (rand() % 8)
-	{
-	case 0: xA = 0; yA = 0; xB = MAP_WIDTH - 1; yB = MAP_HEIGHT - 1; break;
-	case 1: xA = 0; yA = MAP_HEIGHT - 1; xB = MAP_WIDTH - 1; yB = 0; break;
-	case 2: xA = MAP_WIDTH / 2 - 1; yA = MAP_HEIGHT / 2 - 1; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT / 2 + 1; break;
-	case 3: xA = MAP_WIDTH / 2 - 1; yA = MAP_HEIGHT / 2 + 1; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT / 2 - 1; break;
-	case 4: xA = MAP_WIDTH / 2 - 1; yA = 0; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT - 1; break;
-	case 5: xA = MAP_WIDTH / 2 + 1; yA = MAP_HEIGHT - 1; xB = MAP_WIDTH / 2 - 1; yB = 0; break;
-	case 6: xA = 0; yA = MAP_HEIGHT / 2 - 1; xB = MAP_WIDTH - 1; yB = MAP_HEIGHT / 2 + 1; break;
-	case 7: xA = MAP_WIDTH - 1; yA = MAP_HEIGHT / 2 + 1; xB = 0; yB = MAP_HEIGHT / 2 - 1; break;
-	}
-	////////////////////////////////////////////////////////////////////
-	
-	srand(time(NULL));
-	cout << "Map Size (X, Y): " << MAP_WIDTH << MAP_HEIGHT << endl;
-	cout << "Start: " << xA <<"," << yA << endl;
-	cout << "Finish: " << xB << "," << yB << endl;
+// select the start and finish points as we receive from kinect data
+// randomly select start and finish locations
+srand(time(NULL));
 
-	//obtain route, run clock and start pathfinder alg.  Algorithm is run
-	//send in the coords of start and finish, which is randomly generated for now.  
-	//we can change this to reflect kinect values!
-	
-	clock_t start = clock();
-	string route = PathFinder(xA, yA, xB, yB);
-	if (route == "")
-		cout << "Empty Route generated" << endl;
-	clock_t end = clock();
-	double time_elapsed = double(end - start);
-	cout << "Time to calculate route (ms): " << time_elapsed << endl;
-	cout << "Route: " << route << endl;
+int xA, yA, xB, yB;
+switch (rand() % 8)
+{
+case 0: xA = 0; yA = 0; xB = MAP_WIDTH - 1; yB = MAP_HEIGHT - 1; break;
+case 1: xA = 0; yA = MAP_HEIGHT - 1; xB = MAP_WIDTH - 1; yB = 0; break;
+case 2: xA = MAP_WIDTH / 2 - 1; yA = MAP_HEIGHT / 2 - 1; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT / 2 + 1; break;
+case 3: xA = MAP_WIDTH / 2 - 1; yA = MAP_HEIGHT / 2 + 1; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT / 2 - 1; break;
+case 4: xA = MAP_WIDTH / 2 - 1; yA = 0; xB = MAP_WIDTH / 2 + 1; yB = MAP_HEIGHT - 1; break;
+case 5: xA = MAP_WIDTH / 2 + 1; yA = MAP_HEIGHT - 1; xB = MAP_WIDTH / 2 - 1; yB = 0; break;
+case 6: xA = 0; yA = MAP_HEIGHT / 2 - 1; xB = MAP_WIDTH - 1; yB = MAP_HEIGHT / 2 + 1; break;
+case 7: xA = MAP_WIDTH - 1; yA = MAP_HEIGHT / 2 + 1; xB = 0; yB = MAP_HEIGHT / 2 - 1; break;
+}
+////////////////////////////////////////////////////////////////////
 
-	//run the drawMap function
-	DrawMap(route, xA, yA);
-	
-	getchar();				//wait for enter keypress
-	return(0);				//program is done when robot reaches the goal point
+
+cout << "Map Size (X, Y): " << MAP_WIDTH << MAP_HEIGHT << endl;
+cout << "Start: " << xA << "," << yA << endl;
+cout << "Finish: " << xB << "," << yB << endl;
+
+//obtain route, run clock and start pathfinder alg.  Algorithm is run
+//send in the coords of start and finish, which is randomly generated for now.  
+//we can change this to reflect kinect values!
+
+clock_t start = clock();
+string route = PathFinder(xA, yA, xB, yB);
+if (route == "")
+cout << "Empty Route generated" << endl;
+clock_t end = clock();
+double time_elapsed = double(end - start);
+cout << "Time to calculate route (ms): " << time_elapsed << endl;
+cout << "Route: " << route << endl;
+
+//run the drawMap function
+DrawMap(route, xA, yA);
+
+getchar();				//wait for enter keypress
+return(0);				//program is done when robot reaches the goal point
 }
 
 //take in Vectors to draw, perhaps the argument feed should be a list of 4 vertices list<tuple <int, int>> VerticePairs
 void DrawObstacle(int xOb[], int yOb[])
 {
-	
-	
+
+
 	//map given arrays to coords of obstacles
 	int A[2] = { xOb[0], yOb[0] };
 	int B[2] = { xOb[1], yOb[1] };
@@ -296,27 +300,52 @@ void DrawObstacle(int xOb[], int yOb[])
 	if (A[1] == B[1])
 	{
 		for (int i = A[0]; i <= B[0]; i++)
-		{ map[i][A[1]] = 1; }
+		{
+			map[i][A[1]] = 1;
+		}
 
 	}
 	if (B[0] == C[0])
 	{
-		for (int i = B[1]; i >= C[1]; i--)		
-		{ map[B[0]][i] = 1;	}
+		for (int i = B[1]; i >= C[1]; i--)
+		{
+			map[B[0]][i] = 1;
+		}
 	}
-	
+
 	if (C[1] == D[1])
 	{
 		for (int i = C[0]; i >= D[0]; i--)
-		{ map[i][C[1]] = 1; }
+		{
+			map[i][C[1]] = 1;
+		}
 	}
 
 	if (A[0] == D[0])
 	{
 		for (int i = D[1]; i <= A[1]; i++)
-		{ map[D[0]][i] = 1 ; }
+		{
+			map[D[0]][i] = 1;
+		}
 	}
 }
+
+void DrawCircle(int StartX, int StartY, int radius)
+{
+	for (int i = StartX - radius; i <= StartX + radius; i++)
+	{
+		for (int j = StartY - radius; j <= StartY + radius; j++)
+		{
+			if ((StartX - radius)*(StartX - radius) + (StartY - radius)*(StartY - radius) <= radius * radius)
+			{
+				map[i][j] = 1;
+			}
+		}
+	}
+
+}
+
+
 
 void DrawMap(string route, int xA, int yA)
 {
