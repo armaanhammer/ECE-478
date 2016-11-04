@@ -1,0 +1,37 @@
+[System]
+Name='fuzzyLogicMATLAB'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=0
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='Distance'
+Range=[0 100]
+NumMFs=5
+MF1='veryclose':'trimf',[-5 10 25]
+MF2='close':'trimf',[15 30 45]
+MF3='medium':'trimf',[35 50 65]
+MF4='far':'trimf',[55 70 85]
+MF5='veryfar':'trimf',[75 90 105]
+
+[Input2]
+Name='Angle'
+Range=[0 180]
+NumMFs=3
+MF1='right':'trimf',[-90 -8.88e-16 60]
+MF2='middle':'trimf',[60 90 120]
+MF3='left':'trimf',[120 180 258.5]
+
+[Output1]
+Name='Command'
+Range=[0 1]
+NumMFs=0
+
+[Rules]
