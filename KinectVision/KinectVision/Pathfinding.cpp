@@ -241,7 +241,7 @@ int ObsX[4] = { 30, 75, 75, 30 };
 int ObsY[4] = { 45, 45, 35, 35 };
 
 //DrawObstacle(ObsX, ObsY);
-DrawCircle(50, 50, 25);
+DrawCircle(80, 50, 25);
 
 // select the start and finish points as we receive from kinect data
 // randomly select start and finish locations
@@ -300,45 +300,42 @@ void DrawObstacle(int xOb[], int yOb[])
 	if (A[1] == B[1])
 	{
 		for (int i = A[0]; i <= B[0]; i++)
-		{
-			map[i][A[1]] = 1;
-		}
+		{	map[i][A[1]] = 1; }
 
 	}
 	if (B[0] == C[0])
 	{
 		for (int i = B[1]; i >= C[1]; i--)
-		{
-			map[B[0]][i] = 1;
-		}
+		{ map[B[0]][i] = 1; }
 	}
 
 	if (C[1] == D[1])
 	{
 		for (int i = C[0]; i >= D[0]; i--)
-		{
-			map[i][C[1]] = 1;
-		}
+		{ map[i][C[1]] = 1; }
 	}
 
 	if (A[0] == D[0])
 	{
 		for (int i = D[1]; i <= A[1]; i++)
-		{
-			map[D[0]][i] = 1;
-		}
+		{ map[D[0]][i] = 1; }
 	}
 }
 
+//very simple actually,  use equation of a circle points 
+// (x - a)^2 + (y - b)^2 = r^2 
+//start search from bottom corner, search nxn area and force check if the point satisfies the 
+//above equation. seaerches from bottom left to top right.  Fills in entire circle, creating the bounding circle
+
 void DrawCircle(int StartX, int StartY, int radius)
 {
-	for (int i = StartX - radius; i <= StartX + radius; i++)
+	for (int i = StartX - radius; i <= StartX + radius; i++)			//50 - 25, so 25
 	{
-		for (int j = StartY - radius; j <= StartY + radius; j++)
+		for (int j = StartY - radius; j <= StartY + radius; j++)		//50 - 25, so 25 .  starts at 25,25
 		{
-			if ((StartX - radius)*(StartX - radius) + (StartY - radius)*(StartY - radius) <= radius * radius)
+			if ((i - StartX)*(i - StartX) + (j - StartY)*(j - StartY) <= radius * radius && ((i >= 0) && (j >= 0) && (i <=MAP_WIDTH-1) && (j <=MAP_HEIGHT-1)))
 			{
-				map[i][j] = 1;
+				map[i][j] = 1;											//if equation is satisfied AND the i and j do not exceed boundaries of matrix, write 1
 			}
 		}
 	}
@@ -346,7 +343,7 @@ void DrawCircle(int StartX, int StartY, int radius)
 }
 
 
-
+//draws a map.  Now this isnt useful to robots but is extremely useful to testing phases
 void DrawMap(string route, int xA, int yA)
 {
 	//follow route and display it
