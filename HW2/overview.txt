@@ -5,8 +5,10 @@ goal: use genetic algorthm and the Chameleon light controller to evolve a lights
 
 how:
 	the chamelon accepts a 3.5mm audio input, which it then separates into 5 frequeny bands.
-	we can use pyaudio to play a specific frequency for a duration of time
-	https://askubuntu.com/questions/202355/how-to-play-a-fixed-frequency-sound-using-python
+  	we can use pyaudio to play a specific frequency for a duration of time
+		https://askubuntu.com/questions/202355/how-to-play-a-fixed-frequency-sound-using-python
+	we can also use common LIPS
+	https://ccrma.stanford.edu/software/snd/snd/clm.html
 	
 Things we need to know:
 	what frequency range corresponds to which band?
