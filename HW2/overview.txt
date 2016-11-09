@@ -1,0 +1,42 @@
+
+Genetic Algorithm Overview
+
+goal: use genetic algorthm and the Chameleon light controller to evolve a lightshow.
+
+how:
+	the chamelon accepts a 3.5mm audio input, which it then separates into 5 frequeny bands.
+	we can use pyaudio to play a specific frequency for a duration of time
+	https://askubuntu.com/questions/202355/how-to-play-a-fixed-frequency-sound-using-python
+	
+Things we need to know:
+	what frequency range corresponds to which band?
+
+Thigns that need to be done
+	- come up with evaluation system (fitness function)?
+		- evaluate by human
+	- how to do crossover?
+	- save/load to avoid having to restart
+		-should have a counter to say what generation it is
+	
+general flow	
+	- program prepares a gene
+		-load breeding pool
+	- program uses gene to produce 2 lightshow genes
+	-show both lightshows
+		-array of frequency
+		- array of length
+			for(i, i<steps,++i) {
+				play freq (step[i], length[i])
+			}
+		length can be 0!
+	-ask user which was better
+	-add better one to breeding pool
+	- preform evolution
+		-change starting point in sequence/ length
+		-alter sequence
+			- mutation
+			- crossover
+		- alter lengths
+			- 1 sec max length
+	- repeat
+			
