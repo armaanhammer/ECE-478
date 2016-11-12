@@ -34,8 +34,8 @@ def dlight (FREQUENCY, LENGTH):
 
 #See http://www.phy.mtu.edu/~suits/notefreqs.html
 #F = [261.63, 440, 293.66] #Hz, waves per second, 261.63=C4-note.
-F = [0, 1, 2, 3, 4, 4, 3, 2, 1, 0, 3] #10 items
-L = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1] #seconds to play sound
+F = [0, 1, 2, 3, 4]#, 4, 3, 2, 1, 0, 3] #10 items
+L = [1, 5, 1, 5, 5] #.5, .6, .7, .8, .9, 1] #seconds to play sound
 
 #def crossover(parent1_f, parent1_l, parent2_f, parent2_l child1_f, child1_l, child2_f, child2_l);
 #   "crossover function"
@@ -66,15 +66,15 @@ for i in range(len(F)):
         #grab frequency based on #
         #if block to convert 0-4 into a specifc freq
         if F[i] == 0:
-            FREQUENCY = 261.63
+            FREQUENCY = 25 #261.63
         elif F[i] == 1:
-            FREQUENCY = 293.66
+            FREQUENCY = 250 #293.66
         elif F[i] == 2:
-            FREQUENCY = 329.63
+            FREQUENCY = 600
         elif F[i] == 3:
-            FREQUENCY = 349.23
+            FREQUENCY = 1500
         elif F[i] == 4:
-            FREQUENCY = 440
+            FREQUENCY = 4000
         
         dlight(FREQUENCY, LENGTH)
     #end loop
