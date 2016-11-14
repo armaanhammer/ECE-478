@@ -43,14 +43,15 @@ def dlight (FREQUENCY, LENGTH):
 def miccheck():
     "loop to find the light frequencies"
     frq = 10;
-    for (int i = 0; i < 100; i++){
-        printf("freq = ", freq)
+    for i in range(0,100):
+        print 'freq = ', freq
         dlight(freq, 5)
-        freq +=10
-    }
+        freq = freq + 10
+    #end for loop
     return
 
 def crossover():
+    "make children"
     #since we need to change the globals
     global C1
     global C2
@@ -65,6 +66,7 @@ def crossover():
     return
 
 #def evaluate():
+#   "select children for crossover"
 #   global P1
 #   global P2
 #   ask user "first or second?"
@@ -80,11 +82,11 @@ def crossover():
 
 
 def play(F):
+    "play sequence"
 # 10 steps in sequence
 # length can be from 0 - 1 second
 #0-5 for freq, 0 being light 1 4 being light 5. 5 is off
-for i in range(len(F)):
-        #if block to convert 0-5 into a specifc freq
+    for i in range(len(F)):
         wait = 1;
         if F[i] == 0: #Light 1
             FREQUENCY = 25 #261.63
@@ -109,14 +111,17 @@ return
 def main():
     #Seed Parents?
     #first children
-  #DO
-    play(C1)
-    play(C2)
-    #evaluate
-    crossover()
-    ++gen
-    #again 
-  #while(yes
+    again = 1
+    while(again)
+        play(C1)
+        play(C2)
+        #evaluate
+        crossover()
+        gen = gen + 1
+        print 'generation ', gen
+        print ' again? 1 yes 0 no'
+        cin >> again
+    #end while loop
 return
 
 if __name__=="__main__":
