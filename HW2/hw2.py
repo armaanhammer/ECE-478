@@ -13,6 +13,7 @@ BITRATE = 16000 #number of frames per second/frameset.
     P2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
     C1 = [0,1,2,3,4,5,4,3,2,1] #Child 1
     C2 = [0,1,2,3,4,5,5,5,5,5] #Child 2
+    gen = 0 # generation counter
     
 def dlight (FREQUENCY, LENGTH):
     "plays a frequency for a length"
@@ -55,7 +56,7 @@ def crossover():
     global C2
     #   "crossover function"
     index1 = random.randint(1, len(P1) - 2)
-    index2 = random.randint(1, len(P2) - 2):
+    index2 = random.randint(1, len(P2) - 2)
     for i in range(len(parent1_l)):
         C1[i] = P1[:index1] + P2[index1:]
         C2[i] = P1[:index2] + P2[index2:]
@@ -113,8 +114,10 @@ def main():
     play(C2)
     #evaluate
     crossover()
+    ++gen
     #again 
-  #while(yes)
-            
+  #while(yes
+return
+
 if __name__=="__main__":
     main()
