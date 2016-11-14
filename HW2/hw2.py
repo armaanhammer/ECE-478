@@ -32,10 +32,7 @@ def dlight (FREQUENCY, LENGTH):
     p.terminate()
     return
 
-#See http://www.phy.mtu.edu/~suits/notefreqs.html
-#F = [261.63, 440, 293.66] #Hz, waves per second, 261.63=C4-note.
-F = [0, 1, 2, 3, 4]#, 4, 3, 2, 1, 0, 3] #10 items
-L = 5#[5, 5, 5, 5, 5] #.5, .6, .7, .8, .9, 1] #seconds to play sound
+
 
 #def crossover(parent1_f, parent1_l, parent2_f, parent2_l child1_f, child1_l, child2_f, child2_l);
 #   "crossover function"
@@ -59,6 +56,12 @@ L = 5#[5, 5, 5, 5, 5] #.5, .6, .7, .8, .9, 1] #seconds to play sound
 # length can be from 0 - 1 second
 #0-4 for freq, 0 being light 1 4 being light 5
 
+def main():
+#See http://www.phy.mtu.edu/~suits/notefreqs.html
+#F = [261.63, 440, 293.66] #Hz, waves per second, 261.63=C4-note.
+F = [0, 1, 2, 3, 4]#, 4, 3, 2, 1, 0, 3] #10 items
+L = 5#[5, 5, 5, 5, 5] #.5, .6, .7, .8, .9, 1] #seconds to play sound
+
     # loop to play a sequence
 for i in range(len(F)):
 
@@ -80,3 +83,6 @@ for i in range(len(F)):
     #end loop
 #evaluate();
 #again?
+
+if __name__=="__main__":
+    main()
