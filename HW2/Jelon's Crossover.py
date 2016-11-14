@@ -1,8 +1,8 @@
 import random
 
 def main():
-    p1 = [1, 2, 3, 4, 5]
-    p2 = [4, 0, 2, 9, 3]
+    p1 = [0,1,2,3,4,5,4,3,2,1] #Parent 1
+    p2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
 
     p1,p2 = crossover(p1,p2)
 

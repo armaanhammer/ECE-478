@@ -1,6 +1,7 @@
 import math
 import time
 import pyaudio
+import random
 
 #sudo apt-get install python-pyaudio
 PyAudio = pyaudio.PyAudio
@@ -57,11 +58,14 @@ def crossover():
     global C1
     global C2
     #   "crossover function"
-    index1 = random.randint(1, len(P1) - 2)
-    index2 = random.randint(1, len(P2) - 2)
-    for i in range(len(parent1_l)):
-        C1[i] = P1[:index1] + P2[index1:]
-        C2[i] = P1[:index2] + P2[index2:]
+    size = len(P1)
+    index = random.randrange(0,size)
+    temp1 = P1[0:index]
+    temp2 = P1[index:size]
+    C1 = temp2 + temp1
+    temp1 = P2[0:index]
+    temp2 = P2[index:size]
+    C2 = temp2 + temp1
                     
     #end for loop
     return
