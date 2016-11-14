@@ -9,11 +9,12 @@ PyAudio = pyaudio.PyAudio
 BITRATE = 16000 #number of frames per second/frameset.
 
 #Global Chromosomes. all have 10 Alleles
-    P1 = [0,1,2,3,4,5,4,3,2,1] #Parent 1
-    P2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
-    C1 = [0,1,2,3,4,5,4,3,2,1] #Child 1
-    C2 = [0,1,2,3,4,5,5,5,5,5] #Child 2
-    gen = 0 # generation counter
+P1 = [0,1,2,3,4,5,4,3,2,1] #Parent 1
+P2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
+C1 = [0,1,2,3,4,5,4,3,2,1] #Child 1
+C2 = [0,1,2,3,4,5,5,5,5,5] #Child 2
+gen = 0 # generation counter
+L = 5;
     
 def dlight (FREQUENCY, LENGTH):
     "plays a frequency for a length"
@@ -44,7 +45,7 @@ def miccheck():
     "loop to find the light frequencies"
     frq = 10;
     for i in range(0,100):
-        print 'freq = ', freq
+        print ('freq = ', freq)
         dlight(freq, 5)
         freq = freq + 10
     #end for loop
@@ -98,29 +99,26 @@ def play(F):
             FREQUENCY = 1500
         elif F[i] == 4:#Light 5
             FREQUENCY = 4000
-        elif F[i] == 5:#Lights Off
-            wait = 0
-            
-        if(wait)
+       elif F[i] == 5:#Lights Off
+            wait = 0 
+        if wait == 1:
             dlight(FREQUENCY, L)
-        elif(!wait)
+        elif wait == 0:
             time.sleep(L)
-#end of loop
-return
 
 def main():
     #Seed Parents?
     #first children
     again = 1
-    while(again)
+    while(again):
         play(C1)
         play(C2)
         #evaluate
         crossover()
         gen = gen + 1
-        print 'generation ', gen
+        print ('generation ', gen)
         again = input(' again? 1 yes 0 no')
-return
+    #end while loop
 
 if __name__=="__main__":
     main()
