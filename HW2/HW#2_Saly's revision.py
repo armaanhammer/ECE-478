@@ -45,10 +45,10 @@ def crossover(parent1_f, parent2_f, child1_f, child2_f);
     parent2_f = [4, 3, 2, 1, 0]
         for i in range(len(parent1_l)):
             child1_f[i] = parent1_f[:index1] + parent2_f[index1:]
-                child2_f[i] = parent1_f[:index2] + parent2_f[index2:]
+            child2_f[i] = parent1_f[:index2] + parent2_f[index2:]
                     
-                    #end for loop
-                    return (child1_f, child2_f)
+    #end for loop
+    return (child1_f, child2_f)
 
 
 #def evaluate ()
