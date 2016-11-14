@@ -77,7 +77,6 @@ def crossover(parent1, parent2, child1, child2):
 
 
 def play(F):
-#while loop to continue producing lightshows
 # 10 steps in sequence
 # length can be from 0 - 1 second
 #0-5 for freq, 0 being light 1 4 being light 5. 5 is off
@@ -105,7 +104,8 @@ for i in range(len(F)):
 return
 
 def main():
-    # loop to play a sequence
+    #Seed Parents?
+    #first children
     C1 = P1
     C2 = P2
   #DO
@@ -113,12 +113,8 @@ def main():
     play(C2)
     #evaluate
     crossover()
-    
+    #again 
   #while(yes)
-    #end loop
-
-#evaluate();
-#again?
             
 if __name__=="__main__":
     main()
