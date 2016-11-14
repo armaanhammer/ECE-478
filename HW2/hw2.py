@@ -1,4 +1,5 @@
 import math
+import time
 import pyaudio
 
 #sudo apt-get install python-pyaudio
@@ -68,7 +69,7 @@ def crossover(parent1, parent2, child1, child2);
 #while loop to continue producing lightshows
 # 10 steps in sequence
 # length can be from 0 - 1 second
-#0-4 for freq, 0 being light 1 4 being light 5
+#0-5 for freq, 0 being light 1 4 being light 5. 5 is off
 
     # loop to play a sequence
 for i in range(len(F)):
@@ -76,6 +77,7 @@ for i in range(len(F)):
         #LENGTH = L[i]
         #grab frequency based on #
         #if block to convert 0-4 into a specifc freq
+        wait = 1;
         if F[i] == 0:
             FREQUENCY = 25 #261.63
         elif F[i] == 1:
@@ -86,8 +88,13 @@ for i in range(len(F)):
             FREQUENCY = 1500
         elif F[i] == 4:
             FREQUENCY = 4000
-        
-        dlight(FREQUENCY, L)
+        elif F[i] == 5:
+            wait = 0
+            
+        if(wait)
+            dlight(FREQUENCY, L)
+        if(!wait)
+            time.sleep(L)
     #end loop
 #evaluate();
 #again?
