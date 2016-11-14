@@ -11,8 +11,8 @@ BITRATE = 16000 #number of frames per second/frameset.
 #Global Chromosomes. all have 10 Alleles
     P1 = [0,1,2,3,4,5,4,3,2,1] #Parent 1
     P2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
-    C1 = [0,0,0,0,0,0,0,0,0,0] #Child 1
-    C2 = [0,0,0,0,0,0,0,0,0,0] #Child 2
+    C1 = [0,1,2,3,4,5,4,3,2,1] #Child 1
+    C2 = [0,1,2,3,4,5,5,5,5,5] #Child 2
     
 def dlight (FREQUENCY, LENGTH):
     "plays a frequency for a length"
@@ -39,15 +39,18 @@ def dlight (FREQUENCY, LENGTH):
     p.terminate()
     return
 
-#See http://www.phy.mtu.edu/~suits/notefreqs.html
-#F = [261.63, 440, 293.66] #Hz, waves per second, 261.63=C4-note.
-#F = [0, 1, 2, 3, 4]#, 4, 3, 2, 1, 0, 3] #10 items
-#L = 5#[5, 5, 5, 5, 5] #.5, .6, .7, .8, .9, 1] #seconds to play sound
+def miccheck():
+    "loop to find the light frequencies"
+    frq = 10;
+    for (int i = 0; i < 100; i++){
+        printf("freq = ", freq)
+        dlight(freq, 5)
+        freq +=10
+    }
+    return
 
-def crossover(parent1, parent2, child1, child2):
+def crossover():
     #since we need to change the globals
-    global P1
-    global P2
     global C1
     global C2
     #   "crossover function"
@@ -60,7 +63,7 @@ def crossover(parent1, parent2, child1, child2):
     #end for loop
     return
 
-#def evaluate ()
+#def evaluate():
 #   global P1
 #   global P2
 #   ask user "first or second?"
@@ -105,8 +108,6 @@ return
 def main():
     #Seed Parents?
     #first children
-    C1 = P1
-    C2 = P2
   #DO
     play(C1)
     play(C2)
