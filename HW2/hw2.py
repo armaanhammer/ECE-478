@@ -119,9 +119,7 @@ def main():
         crossover()
         gen = gen + 1
         print 'generation ', gen
-        print ' again? 1 yes 0 no'
-        input again
-    #end while loop
+        again = input(' again? 1 yes 0 no')
 return
 
 if __name__=="__main__":
