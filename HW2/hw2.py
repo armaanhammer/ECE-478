@@ -120,7 +120,7 @@ def main():
         gen = gen + 1
         print 'generation ', gen
         print ' again? 1 yes 0 no'
-        cin >> again
+        input again
     #end while loop
 return
 
