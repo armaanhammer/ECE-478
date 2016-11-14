@@ -1,5 +1,6 @@
 import math
 import time
+import random
 import pyaudio
 import random
 
@@ -14,8 +15,7 @@ P1 = [0,1,2,3,4,5,4,3,2,1] #Parent 1
 P2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
 C1 = [0,1,2,3,4,5,4,3,2,1] #Child 1
 C2 = [0,1,2,3,4,5,5,5,5,5] #Child 2
-gen = 0 # generation counter
-L = 5;
+L = 1
     
 def dlight (FREQUENCY, LENGTH):
     "plays a frequency for a length"
@@ -58,6 +58,7 @@ def crossover():
     global C1
     global C2
     #   "crossover function"
+<<<<<<< HEAD
     size = len(P1)
     index = random.randrange(0,size)
     temp1 = P1[0:index]
@@ -66,6 +67,13 @@ def crossover():
     temp1 = P2[0:index]
     temp2 = P2[index:size]
     C2 = temp2 + temp1
+=======
+    index1 = random.randint(1, len(P1) - 2)
+    index2 = random.randint(1, len(P2) - 2)
+    for i in range(len(P1)):
+        C1[i] = P1[:index1] + P2[index1:]
+        C2[i] = P1[:index2] + P2[index2:]
+>>>>>>> origin/master
                     
     #end for loop
     return
@@ -91,6 +99,7 @@ def play(F):
 # 10 steps in sequence
 # length can be from 0 - 1 second
 #0-5 for freq, 0 being light 1 4 being light 5. 5 is off
+    FREQUENCY = 1
     for i in range(len(F)):
         wait = 1;
         if F[i] == 0: #Light 1
@@ -103,7 +112,7 @@ def play(F):
             FREQUENCY = 1500
         elif F[i] == 4:#Light 5
             FREQUENCY = 4000
-       elif F[i] == 5:#Lights Off
+        elif F[i] == 5:#Lights Off
             wait = 0 
         if wait == 1:
             dlight(FREQUENCY, L)
@@ -113,6 +122,7 @@ def play(F):
 def main():
     #Seed Parents?
     #first children
+    gen = 0
     again = 1
     while(again):
         play(C1)
