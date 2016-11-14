@@ -13,26 +13,26 @@ int camera_number = 0;
 int object_found = 0;
 
 //threshold values for hsv
-int H_MIN_red = 0;
-int H_MAX_red = 20;
-int S_MIN_red = 155;
+int H_MIN_red = 255;//0;
+int H_MAX_red = 255;//20;
+int S_MIN_red = 255;//155;
 int S_MAX_red = 255;
-int V_MIN_red = 50;
-int V_MAX_red = 200;
+int V_MIN_red = 255;//50;
+int V_MAX_red = 255;//200;
 
-int H_MIN_blue = 100;
-int H_MAX_blue = 180;
-int S_MIN_blue = 100;
-int S_MAX_blue = 255;
-int V_MIN_blue = 50;
-int V_MAX_blue = 200;
+int H_MIN_blue = 255;//100;
+int H_MAX_blue = 255;//180;
+int S_MIN_blue = 255;//100;
+int S_MAX_blue = 255;//255;
+int V_MIN_blue = 255;//50;
+int V_MAX_blue = 255;//200;
 
-int H_MIN_green = 50;
-int H_MAX_green = 90;
-int S_MIN_green = 100;
-int S_MAX_green = 255;
-int V_MIN_green = 50;
-int V_MAX_green = 200;
+int H_MIN_green = 255;//50;
+int H_MAX_green = 255;//90;
+int S_MIN_green = 255;//100;
+int S_MAX_green = 255;//255;
+int V_MIN_green = 255;//50;
+int V_MAX_green = 255;//200;
 
 int H_MIN_pink = 190;
 int H_MAX_pink = 210;
@@ -135,64 +135,41 @@ void track_object(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) {
 }
 
 void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) {
-	Mat temp;
-	threshold.copyTo(temp);
-	//these two vectors needed for output of findContours
 	Mat threshold_output;
+	threshold.copyTo(threshold_output);
+	//these two vectors needed for output of findContours
 	vector< vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 	//find contours of filtered image using openCV findContours function
-	findContours(temp, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+	findContours(threshold_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point (0,0) );
 
 	// Approximate contours to polygons + get bounding rects and circles
 	vector<vector<Point> > contours_poly(contours.size());
 	vector<Rect> boundRect(contours.size());
 
-	for (int i = 0; i < contours.size(); i++) {
-		//approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
-		boundRect[i] = boundingRect(Mat(contours_poly[i]));
-		//minEnclosingCircle((Mat)contours_poly[i], center[i], radius[i]);
-	}
-	// Draw polygonal contour + bonding rects + circles
-	Mat drawing = Mat::zeros(threshold_output.size(), CV_8UC3);
-	
-	for (int i = 0; i< contours.size(); i++)
-	{
-		//Scalar color = Scalar(0, 255, 0), 2);
-		//drawContours(cameraFeed, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point());
-		rectangle(cameraFeed, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 2, 8, 0);
-		//circle( drawing, center[i], (int)radius[i], color, 2, 8, 0 );
-	}
- }
-/*
-	//use moments method to find our filtered object
-	double refArea = 0;
+	double refArea = 0;                                                                     
 	bool objectFound = false;
 	if (hierarchy.size() > 0) {
 		int numObjects = hierarchy.size();  //if this is big, we have a noisy image
-		for (int index = 0; index >= 0; index = hierarchy[index][0]) {
+		for (int index = 0; index >= 0; index = hierarchy[index][0]) {\
 			Moments moment = moments((cv::Mat)contours[index]);
+			boundRect[index] = boundingRect(Mat(contours_poly[index])); //use moment?
 			double area = moment.m00; //area
 			x = moment.m10 / area; //this is where the proram finds the x/y coordinates of the middle of the object
 			y = moment.m01 / area; //this is where the proram finds the x/y coordinates of the middle of the object
 			objectFound = true;
-			refArea = area;
+			rectangle(cameraFeed, boundRect[index].tl(), boundRect[index].br(), Scalar(0, 255, 0), 2, 8, 0); //tl == top left, br == bottom right
+			refArea = area; 
 		}
 		//let user know you found an object
 		if (objectFound == true) {
-			rect = minAreaRect(contours[0]);
-			box = boxPoints(rect);
-			box = int0(box);
-			drawContours(cameraFeed, [box], 0, (0, 0, 255), 2);
-			//putText(cameraFeed, "Tracking Obstacle", Point(0, 50), 2, 1, Scalar(0, 255, 0), 2);
-			//draw object location on screen			
-			//circle(cameraFeed, Point(x, y), 10, Scalar(0, 255, 0), 2);
+			putText(cameraFeed, "Tracking Object", Point(0, 50), 2, 1, Scalar(0, 255, 0), 2);
+			circle(cameraFeed, Point(x, y), 10, Scalar(255, 0, 0), 2);
 			object_found = 1;
-			//printf("Color %d position: y = %d, z = %d, \n", color, x ,y);
 		}
 	}
-}
-*/
+
+ }
 
 int main()
 {
