@@ -53,8 +53,6 @@ def crossover(parent1, parent2, child1, child2):
     #   "crossover function"
     index1 = random.randint(1, len(P1) - 2)
     index2 = random.randint(1, len(P2) - 2):
-    parent1 = [3, 2, 5, 1, 0]
-    parent2 = [4, 3, 2, 1, 0]
     for i in range(len(parent1_l)):
         C1[i] = P1[:index1] + P2[index1:]
         C2[i] = P1[:index2] + P2[index2:]
