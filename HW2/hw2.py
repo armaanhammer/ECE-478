@@ -58,7 +58,6 @@ def crossover():
     global C1
     global C2
     #   "crossover function"
-<<<<<<< HEAD
     size = len(P1)
     index = random.randrange(0,size)
     temp1 = P1[0:index]
@@ -67,13 +66,6 @@ def crossover():
     temp1 = P2[0:index]
     temp2 = P2[index:size]
     C2 = temp2 + temp1
-=======
-    index1 = random.randint(1, len(P1) - 2)
-    index2 = random.randint(1, len(P2) - 2)
-    for i in range(len(P1)):
-        C1[i] = P1[:index1] + P2[index1:]
-        C2[i] = P1[:index2] + P2[index2:]
->>>>>>> origin/master
                     
     #end for loop
     return
