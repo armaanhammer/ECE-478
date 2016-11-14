@@ -51,16 +51,16 @@ def crossover(parent1, parent2, child1, child2):
     global C1
     global C2
     #   "crossover function"
-    index1 = random.randint(1, len(parent1_l) - 2)
-    index2 = random.randint(1, len(parent2_l) - 2):
+    index1 = random.randint(1, len(P1) - 2)
+    index2 = random.randint(1, len(P2) - 2):
     parent1 = [3, 2, 5, 1, 0]
     parent2 = [4, 3, 2, 1, 0]
     for i in range(len(parent1_l)):
-        child1[i] = parent1[:index1] + parent2[index1:]
-        child2[i] = parent1[:index2] + parent2[index2:]
+        child1[i] = P1[:index1] + P2[index1:]
+        child2[i] = P1[:index2] + P2[index2:]
                     
     #end for loop
-    return (child1, child2)
+    return
 
 #def evaluate ()
 #   global P1
