@@ -63,14 +63,15 @@ def crossover(parent1, parent2, child1, child2):
     return (child1, child2)
 
 #def evaluate ()
-#   "determines fitness of genetics"
+#   global P1
+#   global P2
 #   ask user "first or second?"
 #   get user response
 #   P1 = P2
 #   if ( user liked C1
-        P2 = C1
-    elif
-        P2 = C2
+#        P2 = C1
+#   elif
+#        P2 = C2
         
 #   return
 
