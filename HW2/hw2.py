@@ -32,20 +32,21 @@ def dlight (FREQUENCY, LENGTH):
     p.terminate()
     return
 
+def crossover(parent1_f, parent2_f, child1_f, child2_f);
+    #   "crossover function"
+    index1 = random.randint(1, len(parent1_l) - 2)
+    index2 = random.randint(1, len(parent2_l) - 2):
+    parent1_f = [3, 2, 5, 1, 0]
+    parent2_f = [4, 3, 2, 1, 0]
+        for i in range(len(parent1_l)):
+            child1_f[i] = parent1_f[:index1] + parent2_f[index1:]
+            child2_f[i] = parent1_f[:index2] + parent2_f[index2:]
+                    
+            #end for loop
+        return (child1_f, child2_f)
 
 
-#def crossover(parent1_f, parent1_l, parent2_f, parent2_l child1_f, child1_l, child2_f, child2_l);
-#   "crossover function"
-#   for i in range(len(parent1_l)):
-#       child1_f[i] =
-#       child1_l[i] =
-    #end for loop
-#   for i in range(len(parent1_l)):
-#       child2_f[i] = #child2 should generally be more random
-#       child2_l[i] =
-    #end for loop
-#   
-#   return
+
 
 #def evaluate ()
 #   "determines fitness of genetics"
@@ -59,11 +60,11 @@ def dlight (FREQUENCY, LENGTH):
 def main():
 #See http://www.phy.mtu.edu/~suits/notefreqs.html
 #F = [261.63, 440, 293.66] #Hz, waves per second, 261.63=C4-note.
-F = [0, 1, 2, 3, 4]#, 4, 3, 2, 1, 0, 3] #10 items
-L = 5#[5, 5, 5, 5, 5] #.5, .6, .7, .8, .9, 1] #seconds to play sound
+    F = [0, 1, 2, 3, 4]#, 4, 3, 2, 1, 0, 3] #10 items
+    L = 5#[5, 5, 5, 5, 5] #.5, .6, .7, .8, .9, 1] #seconds to play sound
 
     # loop to play a sequence
-for i in range(len(F)):
+    for i in range(len(F)):
 
         #LENGTH = L[i]
         #grab frequency based on #
