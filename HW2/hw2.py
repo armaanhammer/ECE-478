@@ -7,12 +7,12 @@ PyAudio = pyaudio.PyAudio
 #See http://en.wikipedia.org/wiki/Bit_rate#Audio
 BITRATE = 16000 #number of frames per second/frameset.
 
-#Global Chromosomes
+#Global Chromosomes. all have 10 Alleles
     P1 = [0,1,2,3,4,5,4,3,2,1] #Parent 1
     P2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
     C1 = [0,0,0,0,0,0,0,0,0,0] #Child 1
     C2 = [0,0,0,0,0,0,0,0,0,0] #Child 2
-
+    
 def dlight (FREQUENCY, LENGTH):
     "plays a frequency for a length"
 
@@ -44,6 +44,11 @@ F = [0, 1, 2, 3, 4]#, 4, 3, 2, 1, 0, 3] #10 items
 L = 5#[5, 5, 5, 5, 5] #.5, .6, .7, .8, .9, 1] #seconds to play sound
 
 def crossover(parent1, parent2, child1, child2);
+    #since we need to change the globals
+    global P1
+    global P2
+    global C1
+    global C2
     #   "crossover function"
     index1 = random.randint(1, len(parent1_l) - 2)
     index2 = random.randint(1, len(parent2_l) - 2):
