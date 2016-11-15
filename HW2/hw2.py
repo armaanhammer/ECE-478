@@ -10,6 +10,9 @@ PyAudio = pyaudio.PyAudio
 #See http://en.wikipedia.org/wiki/Bit_rate#Audio
 BITRATE = 16000 #number of frames per second/frameset.
 
+#Temporary variable flag used to select the one chromosome out of two.
+SELECT_CHROMOSOME = false;
+
 #Global Chromosomes. all have 10 Alleles
 P1 = [0,1,2,3,4,5,4,3,2,1] #Parent 1
 P2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
@@ -70,19 +73,32 @@ def crossover():
     #end for loop
     return
 
-#def evaluate():
-#   "select children for crossover"
-#   global P1
-#   global P2
+def evaluate():
+   "select children for crossover"
+   global P1
+   global P2
 #   ask user "first or second?"
-#   get user response
+   while 1:    
+    x = int(input("Press 1 if you like chromose 1 , Press 2 if you like chromosome 2"))
+    if x == 1:
+        print("Chromosome 1 selected")
+        P1 = P2    
+        break
+    elif x == 2:
+        print("Chromosome 2 selected")
+        P2 = C2
+        break
+    else:
+        print("wrong selection, please press  1 or 2")
+
+
 #   P1 = P2
 #   if ( user liked C1
 #        P2 = C1
 #   elif
 #        P2 = C2
         
-#   return
+   return
 
 
 
