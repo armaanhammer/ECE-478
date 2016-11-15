@@ -29,16 +29,16 @@ static int Direction_map[MAP_WIDTH][MAP_HEIGHT];	//map of directionals
 //supported directions in order are:  up, diag up right , up, diag up left, left, diag down left, down, diag down right
 
 //****************************************************************************
-//*   \     |   /
-//*   <--  []  -->
+//*   \     |   /      0       1      2      3       4       5       6        7
+//*   <--  []  -->   right, up right, up, up left, left, down left, down, down right 
 //*   /     |   \
 //****************************************************************************
 static int DirectionX[] = { 1, 1, 0,-1,-1,-1, 0, 1 };
 static int DirectionY[] = { 0, 1, 1, 1, 0,-1,-1,-1 };
 
 //directions to commands
-enum DIRECTION_COMMAND {MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT, TURN_LEFT, TURN_RIGHT, 
-	WALK_STOP, WALK_READY, WALK_SPEED_SLOW, WALK_SPEED_MEDIUM, WALK_SPEED_FAST};
+enum DIRECTION_COMMAND {MOVE_RIGHT, MOVE_UPRIGHT, MOVE_UP, MOVE_UPLEFT, MOVE_LEFT, MOVE_DOWNLEFT,
+	MOVE_DOWN, MOVE_DOWNRIGHT, WALK_STOP, WALK_READY, WALK_SPEED_SLOW, WALK_SPEED_FAST};
 
 
 
@@ -225,6 +225,7 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 void DrawObstacle(int [], int []);
 void DrawMap(string, int, int);
 void DrawCircle(int, int, int);
+void CreateCommandTarget(int, int []);
 
 int main()
 {
@@ -241,7 +242,7 @@ int ObsX[4] = { 30, 75, 75, 30 };
 int ObsY[4] = { 45, 45, 35, 35 };
 
 //DrawObstacle(ObsX, ObsY);
-DrawCircle(80, 50, 25);
+DrawCircle(50, 50, 15);
 
 // select the start and finish points as we receive from kinect data
 // randomly select start and finish locations
@@ -259,8 +260,6 @@ case 5: xA = MAP_WIDTH / 2 + 1; yA = MAP_HEIGHT - 1; xB = MAP_WIDTH / 2 - 1; yB 
 case 6: xA = 0; yA = MAP_HEIGHT / 2 - 1; xB = MAP_WIDTH - 1; yB = MAP_HEIGHT / 2 + 1; break;
 case 7: xA = MAP_WIDTH - 1; yA = MAP_HEIGHT / 2 + 1; xB = 0; yB = MAP_HEIGHT / 2 - 1; break;
 }
-////////////////////////////////////////////////////////////////////
-
 
 cout << "Map Size (X, Y): " << MAP_WIDTH << MAP_HEIGHT << endl;
 cout << "Start: " << xA << "," << yA << endl;
@@ -289,8 +288,6 @@ return(0);				//program is done when robot reaches the goal point
 //take in Vectors to draw, perhaps the argument feed should be a list of 4 vertices list<tuple <int, int>> VerticePairs
 void DrawObstacle(int xOb[], int yOb[])
 {
-
-
 	//map given arrays to coords of obstacles
 	int A[2] = { xOb[0], yOb[0] };
 	int B[2] = { xOb[1], yOb[1] };
@@ -352,16 +349,19 @@ void DrawMap(string route, int xA, int yA)
 		int j; char c;
 		int x = xA;
 		int y = yA;
-		map[x][y] = 2;		//basically set the start coordinates, 2 is the marker.
+		int CommandListJ1[MAP_WIDTH];
+
+		map[x][y] = 2;												//basically set the start coordinates, 2 is the marker.
 		for (int i = 0; i < route.length(); i++)
 		{
 			c = route.at(i);
 			j = c - '0';
 			x = x + DirectionX[j];
 			y = y + DirectionY[j];
-			map[x][y] = 3;		//3 is marker for ROUTE
+			map[x][y] = 3;											//3 is marker for ROUTE
+			CreateCommandTarget(j, CommandListJ1);					//send number to createcommand
 		}
-		map[x][y] = 4;			//mark finish
+		map[x][y] = 4;												//mark finish
 	}
 	// display the map with the route, iterate through matrix
 	// 0 is blank, 1 is obstacle, 2 is start, 3 is route, 4 is finish
@@ -380,4 +380,25 @@ void DrawMap(string route, int xA, int yA)
 				cout << "F"; //finish
 			cout << endl;
 	}
+}
+
+//so take in the directional, its gonna be one of the 8 directions we go in
+//I say we correspond that to a direction in the command, and have a handful of other commands 
+//that are appended to them to form a complete move.  
+void CreateCommandTarget(int Directional, int CommandList[])
+{
+	int CommandEnumerator;
+
+	switch (Directional)
+	{
+	case 0: CommandEnumerator = DIRECTION_COMMAND::MOVE_RIGHT; break;
+	case 1: CommandEnumerator = DIRECTION_COMMAND::MOVE_UPRIGHT; break;
+	case 2: CommandEnumerator = DIRECTION_COMMAND::MOVE_UP; break;
+	case 3: CommandEnumerator = DIRECTION_COMMAND::MOVE_UPLEFT; break;
+	case 4: CommandEnumerator = DIRECTION_COMMAND::MOVE_LEFT; break;
+	case 5: CommandEnumerator = DIRECTION_COMMAND::MOVE_DOWNLEFT; break;
+	case 6: CommandEnumerator = DIRECTION_COMMAND::MOVE_DOWN;  break;
+	case 7: CommandEnumerator = DIRECTION_COMMAND::MOVE_DOWNRIGHT ; break;
+	}
+	//CommandList[] = CommandEnumerator;
 }
