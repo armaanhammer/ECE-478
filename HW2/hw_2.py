@@ -15,7 +15,7 @@ P1 = [0,1,2,3,4,5,4,3,2,1] #Parent 1
 P2 = [0,1,2,3,4,5,5,5,5,5] #Parent 2
 C1 = [0,1,2,3,4,5,4,3,2,1] #Child 1
 C2 = [0,1,2,3,4,5,5,5,5,5] #Child 2
-L = 5
+L = 1
     
 def dlight (FREQUENCY, LENGTH):
     "plays a frequency for a length"
@@ -70,21 +70,24 @@ def crossover():
     #end for loop
     return
 
-#def evaluate():
-#   "select children for crossover"
-#   global P1
-#   global P2
+def evaluate():
+   "select children for crossover"
+   global P1
+   global P2
+   P1 = P2 #get rid of oldest parent
 #   ask user "first or second?"
-#   get user response
-#   P1 = P2
-#   if ( user liked C1
-#        P2 = C1
-#   elif
-#        P2 = C2
-        
-#   return
-
-
+   while 1:    
+    x = int(input("Press 1 if you like chromose 1 , Press 2 if you like chromosome 2"))
+    if x == 1:
+        print("Chromosome 1 selected")
+        P2 = C1    
+        break
+    elif x == 2:
+        print("Chromosome 2 selected")
+        P2 = C2
+        break
+    else:
+        print("wrong selection, please press  1 or 2")
 
 def play(F):
     "play sequence"
@@ -123,7 +126,7 @@ def main():
         time.sleep(5)
         print('playing sequence two')
         play(C2)
-        #evaluate
+        evaluate()
         crossover()
         gen = gen + 1
         print ('generation ', gen)
