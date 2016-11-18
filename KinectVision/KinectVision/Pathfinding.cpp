@@ -225,8 +225,7 @@ string PathFinder(const int & StartX, const int & StartY, const int & GoalX, con
 void DrawObstacle(int [], int []);
 void DrawMap(string, int, int);
 void DrawCircle(int, int, int);
-void CreateCommandTarget(int, int []);
-
+void CreateCommandTarget(int, int [], int);
 int main()
 {
 //build an empty map
@@ -359,7 +358,7 @@ void DrawMap(string route, int xA, int yA)
 			x = x + DirectionX[j];
 			y = y + DirectionY[j];
 			map[x][y] = 3;											//3 is marker for ROUTE
-			CreateCommandTarget(j, CommandListJ1);					//send number to createcommand
+			CreateCommandTarget(j, CommandListJ1, i);					//send number to createcommand
 		}
 		map[x][y] = 4;												//mark finish
 	}
@@ -385,20 +384,48 @@ void DrawMap(string route, int xA, int yA)
 //so take in the directional, its gonna be one of the 8 directions we go in
 //I say we correspond that to a direction in the command, and have a handful of other commands 
 //that are appended to them to form a complete move.  
-void CreateCommandTarget(int Directional, int CommandList[])
+void CreateCommandTarget(int Directional, int CommandList[], int CommandOrder)
 {
 	int CommandEnumerator;
 
 	switch (Directional)
 	{
-	case 0: CommandEnumerator = DIRECTION_COMMAND::MOVE_RIGHT; break;
-	case 1: CommandEnumerator = DIRECTION_COMMAND::MOVE_UPRIGHT; break;
-	case 2: CommandEnumerator = DIRECTION_COMMAND::MOVE_UP; break;
-	case 3: CommandEnumerator = DIRECTION_COMMAND::MOVE_UPLEFT; break;
-	case 4: CommandEnumerator = DIRECTION_COMMAND::MOVE_LEFT; break;
-	case 5: CommandEnumerator = DIRECTION_COMMAND::MOVE_DOWNLEFT; break;
-	case 6: CommandEnumerator = DIRECTION_COMMAND::MOVE_DOWN;  break;
-	case 7: CommandEnumerator = DIRECTION_COMMAND::MOVE_DOWNRIGHT ; break;
+	case 0: 
+		//DIRECTION_COMMAND::MOVE_RIGHT; 
+		if (CommandOrder )
+		CommandList[CommandOrder] = CommandEnumerator;
+		break;
+	case 1: 
+		//DIRECTION_COMMAND::MOVE_UPRIGHT; 
+		CommandList[CommandOrder] = CommandEnumerator;
+		break;
+	case 2: 
+		//DIRECTION_COMMAND::MOVE_UP; 
+		CommandList[CommandOrder] = CommandEnumerator;
+		break;
+	case 3: 
+		//DIRECTION_COMMAND::MOVE_UPLEFT;
+		CommandList[CommandOrder] = CommandEnumerator;
+		break;
+	case 4: 
+		//DIRECTION_COMMAND::MOVE_LEFT; 
+		CommandList[CommandOrder] = CommandEnumerator;
+		break;
+	case 5: 
+		//DIRECTION_COMMAND::MOVE_DOWNLEFT; 
+		CommandList[CommandOrder] = CommandEnumerator;
+		break;
+	case 6: 
+		//DIRECTION_COMMAND::MOVE_DOWN;  
+		CommandList[CommandOrder] = CommandEnumerator;
+		break;
+	case 7: 
+		//DIRECTION_COMMAND::MOVE_DOWNRIGHT; 
+		CommandList[CommandOrder] = CommandEnumerator;
+		break;
 	}
-	//CommandList[] = CommandEnumerator;
+	
+
+	
+
 }
