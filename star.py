@@ -13,12 +13,12 @@ class node:
         self.yPos = yPos
         self.distance = distance
         self.priority = priority
-    def __lt__(self, other): # comparison method for priority queue
+    def __lt__(self, other):                                                                # comparison method for priority queue
         return self.priority < other.priority
     def updatePriority(self, xDest, yDest):
         self.priority = self.distance + self.estimate(xDest, yDest) * 10 # A*
     # give higher priority to going straight instead of diagonally
-    def nextMove(self, dirs, d): # d: direction to move
+    def nextMove(self, dirs, d):                                                            # d: direction to move
         if dirs == 8 and d % 2 != 0:
             self.distance += 14
         else:
@@ -38,34 +38,34 @@ class node:
 # A-star algorithm.
 # The path returned will be a string of digits of directions.
 def pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB):
-    closed_nodes_map = [] # map of closed (tried-out) nodes
-    open_nodes_map = [] # map of open (not-yet-tried) nodes
-    dir_map = [] # map of dirs
+    closed_nodes_map = []                                                                   # map of closed (tried-out) nodes
+    open_nodes_map = []                                                                     # map of open (not-yet-tried) nodes
+    dir_map = []                                                                            # map of dirs
     row = [0] * n
-    for i in range(m): # create 2d arrays
+    for i in range(m):                                                                      # create 2d arrays
         closed_nodes_map.append(list(row))
         open_nodes_map.append(list(row))
         dir_map.append(list(row))
 
-    pq = [[], []] # priority queues of open (not-yet-tried) nodes
-    pqi = 0 # priority queue index
+    pq = [[], []]                                                                           # priority queues of open (not-yet-tried) nodes
+    pqi = 0                                                                                 # priority queue index
     # create the start node and push into list of open nodes
     n0 = node(xA, yA, 0, 0)
     n0.updatePriority(xB, yB)
     heappush(pq[pqi], n0)
-    open_nodes_map[yA][xA] = n0.priority # mark it on the open nodes map
+    open_nodes_map[yA][xA] = n0.priority                                                    # mark it on the open nodes map
 
     # A* search
     while len(pq[pqi]) > 0:
         # get the current node w/ the highest priority
         # from the list of open nodes
-        n1 = pq[pqi][0] # top node
+        n1 = pq[pqi][0]                                                                     # top node
         n0 = node(n1.xPos, n1.yPos, n1.distance, n1.priority)
         x = n0.xPos
         y = n0.yPos
-        heappop(pq[pqi]) # remove the node from the open list
+        heappop(pq[pqi])                                                                    # remove the node from the open list
         open_nodes_map[y][x] = 0
-        closed_nodes_map[y][x] = 1 # mark it on the closed nodes map
+        closed_nodes_map[y][x] = 1                                                          # mark it on the closed nodes map
 
         # quit searching when the goal is reached
         # if n0.estimate(xB, yB) == 0:
@@ -87,41 +87,84 @@ def pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB):
             ydy = y + dy[i]
             if not (xdx < 0 or xdx > n-1 or ydy < 0 or ydy > m - 1
                     or the_map[ydy][xdx] == 1 or closed_nodes_map[ydy][xdx] == 1):
-                # generate a child node
+                                                                                            # generate a child node
                 m0 = node(xdx, ydy, n0.distance, n0.priority)
                 m0.nextMove(dirs, i)
                 m0.updatePriority(xB, yB)
-                # if it is not in the open list then add into that
+                                                                                            # if it is not in the open list then add into that
                 if open_nodes_map[ydy][xdx] == 0:
                     open_nodes_map[ydy][xdx] = m0.priority
                     heappush(pq[pqi], m0)
-                    # mark its parent node direction
+                                                                                            # mark its parent node direction
                     dir_map[ydy][xdx] = (i + dirs / 2) % dirs
                 elif open_nodes_map[ydy][xdx] > m0.priority:
-                    # update the priority
+                                                                                            # update the priority
                     open_nodes_map[ydy][xdx] = m0.priority
-                    # update the parent direction
+                                                                                            # update the parent direction
                     dir_map[ydy][xdx] = (i + dirs / 2) % dirs
-                    # replace the node
-                    # by emptying one pq to the other one
-                    # except the node to be replaced will be ignored
-                    # and the new node will be pushed in instead
+                                                                                            # replace the node
+                                                                                            # by emptying one pq to the other one
+                                                                                            # except the node to be replaced will be ignored
+                                                                                            # and the new node will be pushed in instead
                     while not (pq[pqi][0].xPos == xdx and pq[pqi][0].yPos == ydy):
                         heappush(pq[1 - pqi], pq[pqi][0])
                         heappop(pq[pqi])
-                    heappop(pq[pqi]) # remove the target node
-                    # empty the larger size priority queue to the smaller one
+                    heappop(pq[pqi])                                                        # remove the target node
+                                                                                            # empty the larger size priority queue to the smaller one
                     if len(pq[pqi]) > len(pq[1 - pqi]):
                         pqi = 1 - pqi
                     while len(pq[pqi]) > 0:
                         heappush(pq[1-pqi], pq[pqi][0])
                         heappop(pq[pqi])       
                     pqi = 1 - pqi
-                    heappush(pq[pqi], m0) # add the better node instead
-    return '' # if no route found
+                    heappush(pq[pqi], m0)                                                   # add the better node instead
+    return ''                                                                               # if no route found
 
+
+#Draw circles based on start x and y of center and radius
+def DrawCircle(StartX, StartY, radius, n, m):
+    for i in range (StartX - radius, StartX + radius):
+        for j in range (StartY - radius, StartY + radius):
+            if ((i - StartX)* (i - StartX) + (j - StartY)*(j - StartY) <= radius * radius and ((i >= 0) and (j >= 0) and (i <= n-1) and (j <= m-1))):    
+                the_map[i][j] = 1
+
+
+def CreateCommandTarget(Directional):
+    
+    
+    #Direction move right
+    if Directional == 0:
+
+    
+    #Direction move up right    
+    elif Directional == 1:
+
+
+    #Direction move up
+    elif Directional == 2:
+
+
+    #Direction move up left    
+    elif Directional == 3:
+
+
+    #Direction move left
+    elif Directional == 4:
+
+
+    #Direction move down left
+    elif Directional == 5:
+
+
+    #Direction move down
+    elif Directional == 6:
+
+
+    #Direction move down right
+    else Directional == 7:
+        
 # MAIN
-dirs = 8 # number of possible directions to move on the map
+dirs = 8                                                                # number of possible directions to move on the map
 if dirs == 4:
     dx = [1, 0, -1, 0]
     dy = [0, 1, 0, -1]
@@ -129,18 +172,16 @@ elif dirs == 8:
     dx = [1, 1, 0, -1, -1, -1, 0, 1]
     dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
-n = 30 # horizontal size of the map
-m = 30 # vertical size of the map
+n = 100                                                                 # horizontal size of the map
+m = 100                                                                 # vertical size of the map
 the_map = []
 row = [0] * n
-for i in range(m): # create empty map
+CommandDelegate = []
+for i in range(m):                                                      # create empty map
     the_map.append(list(row))
 
-# fillout the map with a '+' pattern
-for x in range(n / 8, n * 7 / 8):
-    the_map[m / 2][x] = 1
-for y in range(m/8, m * 7 / 8):
-    the_map[y][n / 2] = 1
+#draw obstacles if any.  
+DrawCircle(50, 50, 25, n, m)
 
 # randomly select start and finish locations from a list
 sf = []
@@ -173,6 +214,8 @@ if len(route) > 0:
         x += dx[j]
         y += dy[j]
         the_map[y][x] = 3
+        print 'currnt direction:' , j
+        #createCommandTarget(j, 
     the_map[y][x] = 4
 
 # display the map with the route added
