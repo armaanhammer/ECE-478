@@ -2,6 +2,7 @@ from heapq import heappush, heappop # for priority queue
 import math
 import time
 import random
+import socket
 
 class node:
     xPos = 0 # x position
@@ -129,39 +130,59 @@ def DrawCircle(StartX, StartY, radius, n, m):
                 the_map[i][j] = 1
 
 
-def CreateCommandTarget(Directional):
-    
-    
-    #Direction move right
-    if Directional == 0:
 
-    
-    #Direction move up right    
-    elif Directional == 1:
+#UDP client code for sending command
+def Client_send():
+    host = '127.0.0.1'
+    port = 5001
 
+    server = ('127.0.0.1',5000)
 
-    #Direction move up
-    elif Directional == 2:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind((host, port))
 
-
-    #Direction move up left    
-    elif Directional == 3:
-
-
-    #Direction move left
-    elif Directional == 4:
+    message = raw_input("-> ")
+    while message != 'q':
+        s.sendto(message, server)
+        data, addr = s.recvfrom(1024)
+        print 'Received from server: ' + str(data)
+        message = raw_input("-> ")
+    s.close()
 
 
-    #Direction move down left
-    elif Directional == 5:
-
-
-    #Direction move down
-    elif Directional == 6:
-
-
-    #Direction move down right
-    else Directional == 7:
+#def CreateCommandTarget(Directional):
+#    
+#    
+#    #Direction move right
+#    if Directional == 0:
+#
+#    
+#    #Direction move up right    
+#    elif Directional == 1:
+#
+#
+#    #Direction move up
+#    elif Directional == 2:
+#
+#
+#    #Direction move up left    
+#    elif Directional == 3:
+#
+#
+#    #Direction move left
+#    elif Directional == 4:
+#
+#
+#    #Direction move down left
+#    elif Directional == 5:
+#
+#
+#    #Direction move down
+#    elif Directional == 6:
+#
+#
+#    #Direction move down right
+#    else Directional == 7:
         
 # MAIN
 dirs = 8                                                                # number of possible directions to move on the map
