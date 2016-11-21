@@ -255,8 +255,6 @@ def Main():
     print 'Start: ', xA, yA
     print 'Finish: ', xB, yB
 
-
-    
     while (xA != xB and yA != yB):
         # Actual Running A Star Algorithm
         t = time.time()
@@ -265,7 +263,6 @@ def Main():
         print 'Route:'
         print route
         
-
         # mark the route on the map
         if len(route) > 0:
             x = xA
@@ -282,10 +279,8 @@ def Main():
 
             draw_map(the_map,m,n)
             xA -= 1
+            yA += 1
             
-
-        
-
 
 if __name__=="__main__":
     Main()
