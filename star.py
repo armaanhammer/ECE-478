@@ -142,57 +142,68 @@ def Client_send(msm_string):
 
 
 def CreateCommandTarget(Directional,CommandDelegate,CommandList):
+    global count
     CommandSendBatch = []
     if not CommandDelegate:
         CommandDelegate.append(Directional)
         
     #Direction move right
     if Directional == 0:
+        count += 1 
         CommandSendBatch.append(CommandList[0])
         CommandSendBatch.append(CommandList[2])
     
     #Direction move up right    
     elif Directional == 1:
+        count += 1
         CommandSendBatch.append(CommandList[0])
         CommandSendBatch.append(CommandList[1])
         
     #Direction move up
     elif Directional == 2:
+        count += 1
         CommandSendBatch.append(CommandList[0])
         CommandSendBatch.append(CommandList[4])
 
     #Direction move up left    
     elif Directional == 3:
+        count += 1
         CommandSendBatch.append(CommandList[0])
         CommandSendBatch.append(CommandList[3])
     #Direction move left
     elif Directional == 4:
+        count += 1
         CommandSendBatch.append(CommandList[0])
         CommandSendBatch.append(CommandList[2])
 
     #Direction move down left
     elif Directional == 5:
+        count += 1
         CommandSendBatch.append(CommandList[0])
         CommandSendBatch.append(CommandList[6])
 
     #Direction move down
     elif Directional == 6:
+        count += 1
         CommandSendBatch.append(CommandList[0])
         CommandSendBatch.append(CommandList[3])
         
     #Direction move down right
     elif Directional == 7:
+        count += 1
         CommandSendBatch.append(CommandList[0])
         CommandSendBatch.append(CommandList[4])
 
+    print count
     print CommandSendBatch
     msg = ','.join(CommandSendBatch)
     Client_send(msg)                                       #send commands to UDP delegation
 
         
 # MAIN
-
 def Main():
+    global count
+    count = 0
     dirs = 8                                                                # number of possible directions to move on the map
     if dirs == 4:
         dx = [1, 0, -1, 0]
@@ -201,8 +212,10 @@ def Main():
         dx = [1, 1, 0, -1, -1, -1, 0, 1]
         dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
-    n = 100                                                                 # horizontal size of the map
-    m = 100                                                                 # vertical size of the map
+
+    # 0 = right, 1 = down right , 2 = down, 3 = down-left , 4 = left, 5 = up-left, 6 = up, 7 = Up-right
+    n = 50                                                                 # horizontal size of the map
+    m = 50                                                                 # vertical size of the map
     the_map = []
     row = [0] * n
     CommandDelegate = []
@@ -211,10 +224,10 @@ def Main():
         the_map.append(list(row))
 
     #draw obstacles if any.  
-    DrawCircle(50, 50, 10, n, m, the_map)
+    DrawCircle(15, 15, 5, n, m, the_map)
 
     # Defined start location for robot and destination
-    (xA, yA, xB, yB) = (75, 50, 20, 30)
+    (xA, yA, xB, yB) = (40, 5, , 15)
 
     print 'Map size (X,Y): ', n, m
     print 'Start: ', xA, yA
@@ -238,7 +251,7 @@ def Main():
             y += dy[j]
             the_map[y][x] = 3
             #print 'currnt direction:' , j
-            CreateCommandTarget(j,CommandDelegate,CommandList) 
+            #CreateCommandTarget(j,CommandDelegate,CommandList) 
         the_map[y][x] = 4
 
     # display the map with the route added
