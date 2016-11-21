@@ -278,6 +278,7 @@ def Main():
             the_map[y][x] = 4
 
             draw_map(the_map,m,n)
+            # This will be new robot position fed in from the kinect
             xA -= 1
             yA += 1
             
