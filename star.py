@@ -130,6 +130,22 @@ def DrawCircle(StartX, StartY, radius, n, m, the_map):
                 the_map[i][j] = 1
 
 
+def draw_map(the_map,n,m):
+    print 'Map:'
+    for y in range(m):
+        for x in range(n):
+            xy = the_map[y][x]
+            if xy == 0:
+                print '.', # space
+            elif xy == 1:
+                print 'O', # obstacle
+            elif xy == 2:
+                print 'S', # start
+            elif xy == 3:
+                print 'R', # route
+            elif xy == 4:
+                print 'F', # finish
+        print
 
 #UDP client code for sending command
 def Client_send(msm_string):
@@ -199,6 +215,9 @@ def CreateCommandTarget(Directional,CommandDelegate,CommandList):
     msg = ','.join(CommandSendBatch)
     Client_send(msg)                                       #send commands to UDP delegation
 
+
+
+
         
 # MAIN
 def Main():
@@ -227,49 +246,46 @@ def Main():
     DrawCircle(15, 15, 5, n, m, the_map)
 
     # Defined start location for robot and destination
-    (xA, yA, xB, yB) = (40, 5, , 15)
+    global xA
+    global yA
+    (xA, yA) = (40, 5)          # robot position
+    (xB, yB) = (7, 15)          # Final Destination
 
     print 'Map size (X,Y): ', n, m
     print 'Start: ', xA, yA
     print 'Finish: ', xB, yB
-    t = time.time()
-    route = pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB)
-    print 'Time to generate the route (seconds): ', time.time() - t
-    print 'Route:'
-    print route
-    #Client_send(route)
 
 
-    # mark the route on the map
-    if len(route) > 0:
-        x = xA
-        y = yA
-        the_map[y][x] = 2
-        for i in range(len(route)):
-            j = int(route[i])
-            x += dx[j]
-            y += dy[j]
-            the_map[y][x] = 3
-            #print 'currnt direction:' , j
-            #CreateCommandTarget(j,CommandDelegate,CommandList) 
-        the_map[y][x] = 4
+    
+    while (xA != xB and yA != yB):
+        # Actual Running A Star Algorithm
+        t = time.time()
+        route = pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB)
+        print 'Time to generate the route (seconds): ', time.time() - t
+        print 'Route:'
+        print route
+        
 
-    # display the map with the route added
-    print 'Map:'
-    for y in range(m):
-        for x in range(n):
-            xy = the_map[y][x]
-            if xy == 0:
-                print '.', # space
-            elif xy == 1:
-                print 'O', # obstacle
-            elif xy == 2:
-                print 'S', # start
-            elif xy == 3:
-                print 'R', # route
-            elif xy == 4:
-                print 'F', # finish
-        print
+        # mark the route on the map
+        if len(route) > 0:
+            x = xA
+            y = yA
+            the_map[y][x] = 2
+            for i in range(len(route)):
+                j = int(route[i])
+                x += dx[j]
+                y += dy[j]
+                the_map[y][x] = 3
+                #print 'currnt direction:' , j
+                #CreateCommandTarget(j,CommandDelegate,CommandList) 
+            the_map[y][x] = 4
+
+            draw_map(the_map,m,n)
+            xA -= 1
+            
+
+        
+
 
 if __name__=="__main__":
     Main()
