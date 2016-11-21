@@ -141,7 +141,9 @@ def Client_send(CommandSendBatch):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.bind((host, port))
 
+    print 'Current command is: ' , CommandSendBatch[0]              #debug statements
     message = raw_input("-> ")
+    
     while message != 'q':
         s.sendto(message, server)
         data, addr = s.recvfrom(1024)
@@ -158,35 +160,34 @@ def CreateCommandTarget(Directional):
         
     #Direction move right
     if Directional == 0:
-        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+        CommandSendBatch.insert(0, (CommandList[0]))
     
     #Direction move up right    
     elif Directional == 1:
-        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+        CommandSendBatch.insert(0, (CommandList[0]))
 
     #Direction move up
     elif Directional == 2:
-        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+        CommandSendBatch.insert(0, (CommandList[0]))
 
     #Direction move up left    
     elif Directional == 3:
-        CommandSendBatch.insert(0, enumerate(CommandList, 0))
-
+        CommandSendBatch.insert(0, (CommandList[0]))
     #Direction move left
     elif Directional == 4:
-        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+        CommandSendBatch.insert(0, (CommandList[0]))
 
     #Direction move down left
     elif Directional == 5:
-        CommandSendBatch.insert(0,enumerate(CommandList, 0))
+        CommandSendBatch.insert(0,(CommandList[0]))
 
     #Direction move down
     elif Directional == 6:
-        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+        CommandSendBatch.insert(0, (CommandList[0]))
         
     #Direction move down right
     elif Directional == 7:
-        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+        CommandSendBatch.insert(0, (CommandList[0]))
 
     Client_send(CommandSendBatch)                                       #send commands to UDP delegation
 
