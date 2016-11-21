@@ -123,7 +123,7 @@ def pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB):
 
 
 #Draw circles based on start x and y of center and radius
-def DrawCircle(StartX, StartY, radius, n, m):
+def DrawCircle(StartX, StartY, radius, n, m, the_map):
     for i in range (StartX - radius, StartX + radius):
         for j in range (StartY - radius, StartY + radius):
             if ((i - StartX)* (i - StartX) + (j - StartY)*(j - StartY) <= radius * radius and ((i >= 0) and (j >= 0) and (i <= n-1) and (j <= m-1))):    
@@ -132,136 +132,115 @@ def DrawCircle(StartX, StartY, radius, n, m):
 
 
 #UDP client code for sending command
-def Client_send(CommandSendBatch):
+def Client_send(msm_string):
     host = '127.0.0.1'
-    port = 5001
-
-    server = ('127.0.0.1',5000)
+    port = 3100
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind((host, port))
-
-    print 'Current command is: ' , CommandSendBatch[0]              #debug statements
-    message = raw_input("-> ")
-    
-    while message != 'q':
-        s.sendto(message, server)
-        data, addr = s.recvfrom(1024)
-        print 'Received from server: ' + str(data)
-        message = raw_input("-> ")
+    s.sendto(msm_string + "\n", (host, port))
     s.close()
 
 
-def CreateCommandTarget(Directional):
-
-    CommandSendBatch = []
-    if not CommandDelegate:
-        CommandDelegate.append(Directional)
+#def CreateCommandTarget(Directional):
+#    
+#    
+#    #Direction move right
+#    if Directional == 0:
+#
+#    
+#    #Direction move up right    
+#    elif Directional == 1:
+#
+#
+#    #Direction move up
+#    elif Directional == 2:
+#
+#
+#    #Direction move up left    
+#    elif Directional == 3:
+#
+#
+#    #Direction move left
+#    elif Directional == 4:
+#
+#
+#    #Direction move down left
+#    elif Directional == 5:
+#
+#
+#    #Direction move down
+#    elif Directional == 6:
+#
+#
+#    #Direction move down right
+#    else Directional == 7:
         
-    #Direction move right
-    if Directional == 0:
-        CommandSendBatch.insert(0, (CommandList[0]))
-    
-    #Direction move up right    
-    elif Directional == 1:
-        CommandSendBatch.insert(0, (CommandList[0]))
-
-    #Direction move up
-    elif Directional == 2:
-        CommandSendBatch.insert(0, (CommandList[0]))
-
-    #Direction move up left    
-    elif Directional == 3:
-        CommandSendBatch.insert(0, (CommandList[0]))
-    #Direction move left
-    elif Directional == 4:
-        CommandSendBatch.insert(0, (CommandList[0]))
-
-    #Direction move down left
-    elif Directional == 5:
-        CommandSendBatch.insert(0,(CommandList[0]))
-
-    #Direction move down
-    elif Directional == 6:
-        CommandSendBatch.insert(0, (CommandList[0]))
-        
-    #Direction move down right
-    elif Directional == 7:
-        CommandSendBatch.insert(0, (CommandList[0]))
-
-    Client_send(CommandSendBatch)                                       #send commands to UDP delegation
-
 # MAIN
-dirs = 8                                                                # number of possible directions to move on the map
-if dirs == 4:
-    dx = [1, 0, -1, 0]
-    dy = [0, 1, 0, -1]
-elif dirs == 8:
-    dx = [1, 1, 0, -1, -1, -1, 0, 1]
-    dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
-n = 100                                                                 # horizontal size of the map
-m = 100                                                                 # vertical size of the map
-the_map = []
-row = [0] * n
-CommandDelegate = []
-CommandList = ['MOVE_FORWARD', 'MOVE_TURNLEFT', 'MOVE_TURNRIGHT', 'MOVE_BACK', 'WALK_READY', 'WALK_SLOW', 'WALK_FAST']
-for i in range(m):                                                      # create empty map
-    the_map.append(list(row))
+def Main():
+    dirs = 8                                                                # number of possible directions to move on the map
+    if dirs == 4:
+        dx = [1, 0, -1, 0]
+        dy = [0, 1, 0, -1]
+    elif dirs == 8:
+        dx = [1, 1, 0, -1, -1, -1, 0, 1]
+        dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
-#draw obstacles if any.  
-DrawCircle(50, 50, 25, n, m)
+    n = 100                                                                 # horizontal size of the map
+    m = 100                                                                 # vertical size of the map
+    the_map = []
+    row = [0] * n
+    CommandDelegate = []
+    for i in range(m):                                                      # create empty map
+        the_map.append(list(row))
 
-# randomly select start and finish locations from a list
-sf = []
-sf.append((0, 0, n - 1, m - 1))
-sf.append((0, m - 1, n - 1, 0))
-sf.append((n / 2 - 1, m / 2 - 1, n / 2 + 1, m / 2 + 1))
-sf.append((n / 2 - 1, m / 2 + 1, n / 2 + 1, m / 2 - 1))
-sf.append((n / 2 - 1, 0, n / 2 + 1, m - 1))
-sf.append((n / 2 + 1, m - 1, n / 2 - 1, 0))
-sf.append((0, m / 2 - 1, n - 1, m / 2 + 1))
-sf.append((n - 1, m / 2 + 1, 0, m / 2 - 1))
-(xA, yA, xB, yB) = random.choice(sf)
+    #draw obstacles if any.  
+    DrawCircle(50, 50, 10, n, m, the_map)
 
-print 'Map size (X,Y): ', n, m
-print 'Start: ', xA, yA
-print 'Finish: ', xB, yB
-t = time.time()
-route = pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB)
-print 'Time to generate the route (seconds): ', time.time() - t
-print 'Route:'
-print route
+    # Defined start location for robot and destination
+    (xA, yA, xB, yB) = (75, 50, 20, 30)
 
-# mark the route on the map
-if len(route) > 0:
-    x = xA
-    y = yA
-    the_map[y][x] = 2
-    for i in range(len(route)):
-        j = int(route[i])
-        x += dx[j]
-        y += dy[j]
-        the_map[y][x] = 3
-        print 'currnt direction:' , j
-        CreateCommandTarget(j)
-    the_map[y][x] = 4
+    print 'Map size (X,Y): ', n, m
+    print 'Start: ', xA, yA
+    print 'Finish: ', xB, yB
+    t = time.time()
+    route = pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB)
+    print 'Time to generate the route (seconds): ', time.time() - t
+    print 'Route:'
+    print route
+    Client_send(route)
 
-# display the map with the route added
-print 'Map:'
-for y in range(m):
-    for x in range(n):
-        xy = the_map[y][x]
-        if xy == 0:
-            print '.', # space
-        elif xy == 1:
-            print 'O', # obstacle
-        elif xy == 2:
-            print 'S', # start
-        elif xy == 3:
-            print 'R', # route
-        elif xy == 4:
-            print 'F', # finish
-    print
 
-raw_input('Press Enter...')
+    # mark the route on the map
+    if len(route) > 0:
+        x = xA
+        y = yA
+        the_map[y][x] = 2
+        for i in range(len(route)):
+            j = int(route[i])
+            x += dx[j]
+            y += dy[j]
+            the_map[y][x] = 3
+            #print 'currnt direction:' , j
+            #createCommandTarget(j, 
+        the_map[y][x] = 4
+
+    # display the map with the route added
+    print 'Map:'
+    for y in range(m):
+        for x in range(n):
+            xy = the_map[y][x]
+            if xy == 0:
+                print '.', # space
+            elif xy == 1:
+                print 'O', # obstacle
+            elif xy == 2:
+                print 'S', # start
+            elif xy == 3:
+                print 'R', # route
+            elif xy == 4:
+                print 'F', # finish
+        print
+
+if __name__=="__main__":
+    Main()

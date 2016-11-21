@@ -1,23 +1,15 @@
-import socket
+import SocketServer
 
-def Main():
-    host = '127.0.0.1'
-    port = 5000
+class MyUDPHandler(SocketServer.BaseRequestHandler):
+    def handle(self):
+        data = self.request[0].strip()
+        socket = self.request[1]
+        print "{} wrote:".format(self.client_address[0])
+        print data
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind((host,port))
-
-
-    print "Server Started."
-    while True:
-        data, addr = s.recvfrom(1024)
-        print "message From: " + str(addr)
-        print "from connected user: " + str(data)
-        data = str(data).upper()
-        print "sending: " + str(data)
-        s.sendto(data, addr)
-    c.close()
-
-if __name__ == '__main__':
-    Main()
+if __name__ == "__main__":
+    print "Server for this jimmy has started"
+    HOST, PORT = "127.0.0.1", 3100
+    server = SocketServer.UDPServer((HOST, PORT), MyUDPHandler)
+    server.serve_forever()
 
