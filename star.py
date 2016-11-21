@@ -141,39 +141,54 @@ def Client_send(msm_string):
     s.close()
 
 
-#def CreateCommandTarget(Directional):
-#    
-#    
-#    #Direction move right
-#    if Directional == 0:
-#
-#    
-#    #Direction move up right    
-#    elif Directional == 1:
-#
-#
-#    #Direction move up
-#    elif Directional == 2:
-#
-#
-#    #Direction move up left    
-#    elif Directional == 3:
-#
-#
-#    #Direction move left
-#    elif Directional == 4:
-#
-#
-#    #Direction move down left
-#    elif Directional == 5:
-#
-#
-#    #Direction move down
-#    elif Directional == 6:
-#
-#
-#    #Direction move down right
-#    else Directional == 7:
+def CreateCommandTarget(Directional,CommandDelegate,CommandList):
+    CommandSendBatch = []
+    if not CommandDelegate:
+        CommandDelegate.append(Directional)
+        
+    #Direction move right
+    if Directional == 0:
+        CommandSendBatch.append(CommandList[0])
+        CommandSendBatch.append(CommandList[2])
+    
+    #Direction move up right    
+    elif Directional == 1:
+        CommandSendBatch.append(CommandList[0])
+        CommandSendBatch.append(CommandList[1])
+        
+    #Direction move up
+    elif Directional == 2:
+        CommandSendBatch.append(CommandList[0])
+        CommandSendBatch.append(CommandList[4])
+
+    #Direction move up left    
+    elif Directional == 3:
+        CommandSendBatch.append(CommandList[0])
+        CommandSendBatch.append(CommandList[3])
+    #Direction move left
+    elif Directional == 4:
+        CommandSendBatch.append(CommandList[0])
+        CommandSendBatch.append(CommandList[2])
+
+    #Direction move down left
+    elif Directional == 5:
+        CommandSendBatch.append(CommandList[0])
+        CommandSendBatch.append(CommandList[6])
+
+    #Direction move down
+    elif Directional == 6:
+        CommandSendBatch.append(CommandList[0])
+        CommandSendBatch.append(CommandList[3])
+        
+    #Direction move down right
+    elif Directional == 7:
+        CommandSendBatch.append(CommandList[0])
+        CommandSendBatch.append(CommandList[4])
+
+    print CommandSendBatch
+    msg = ','.join(CommandSendBatch)
+    Client_send(msg)                                       #send commands to UDP delegation
+
         
 # MAIN
 
@@ -191,6 +206,7 @@ def Main():
     the_map = []
     row = [0] * n
     CommandDelegate = []
+    CommandList = ['MOVE_FORWARD', 'MOVE_TURNLEFT', 'MOVE_TURNRIGHT', 'MOVE_BACK', 'WALK_READY', 'WALK_SLOW', 'WALK_FAST']
     for i in range(m):                                                      # create empty map
         the_map.append(list(row))
 
@@ -208,7 +224,7 @@ def Main():
     print 'Time to generate the route (seconds): ', time.time() - t
     print 'Route:'
     print route
-    Client_send(route)
+    #Client_send(route)
 
 
     # mark the route on the map
@@ -222,7 +238,7 @@ def Main():
             y += dy[j]
             the_map[y][x] = 3
             #print 'currnt direction:' , j
-            #createCommandTarget(j, 
+            CreateCommandTarget(j,CommandDelegate,CommandList) 
         the_map[y][x] = 4
 
     # display the map with the route added
