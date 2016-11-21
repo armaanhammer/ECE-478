@@ -132,7 +132,7 @@ def DrawCircle(StartX, StartY, radius, n, m):
 
 
 #UDP client code for sending command
-def Client_send():
+def Client_send(CommandSendBatch):
     host = '127.0.0.1'
     port = 5001
 
@@ -150,40 +150,46 @@ def Client_send():
     s.close()
 
 
-#def CreateCommandTarget(Directional):
-#    
-#    
-#    #Direction move right
-#    if Directional == 0:
-#
-#    
-#    #Direction move up right    
-#    elif Directional == 1:
-#
-#
-#    #Direction move up
-#    elif Directional == 2:
-#
-#
-#    #Direction move up left    
-#    elif Directional == 3:
-#
-#
-#    #Direction move left
-#    elif Directional == 4:
-#
-#
-#    #Direction move down left
-#    elif Directional == 5:
-#
-#
-#    #Direction move down
-#    elif Directional == 6:
-#
-#
-#    #Direction move down right
-#    else Directional == 7:
+def CreateCommandTarget(Directional):
+
+    CommandSendBatch = []
+    if not CommandDelegate:
+        CommandDelegate.append(Directional)
         
+    #Direction move right
+    if Directional == 0:
+        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+    
+    #Direction move up right    
+    elif Directional == 1:
+        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+
+    #Direction move up
+    elif Directional == 2:
+        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+
+    #Direction move up left    
+    elif Directional == 3:
+        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+
+    #Direction move left
+    elif Directional == 4:
+        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+
+    #Direction move down left
+    elif Directional == 5:
+        CommandSendBatch.insert(0,enumerate(CommandList, 0))
+
+    #Direction move down
+    elif Directional == 6:
+        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+        
+    #Direction move down right
+    elif Directional == 7:
+        CommandSendBatch.insert(0, enumerate(CommandList, 0))
+
+    Client_send(CommandSendBatch)                                       #send commands to UDP delegation
+
 # MAIN
 dirs = 8                                                                # number of possible directions to move on the map
 if dirs == 4:
@@ -198,6 +204,7 @@ m = 100                                                                 # vertic
 the_map = []
 row = [0] * n
 CommandDelegate = []
+CommandList = ['MOVE_FORWARD', 'MOVE_TURNLEFT', 'MOVE_TURNRIGHT', 'MOVE_BACK', 'WALK_READY', 'WALK_SLOW', 'WALK_FAST']
 for i in range(m):                                                      # create empty map
     the_map.append(list(row))
 
@@ -236,7 +243,7 @@ if len(route) > 0:
         y += dy[j]
         the_map[y][x] = 3
         print 'currnt direction:' , j
-        #createCommandTarget(j, 
+        CreateCommandTarget(j)
     the_map[y][x] = 4
 
 # display the map with the route added
