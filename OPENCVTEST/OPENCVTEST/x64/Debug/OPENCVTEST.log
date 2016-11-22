@@ -1,0 +1,33 @@
+﻿Build started 11/21/2016 16:36:25.
+     1>Project "D:\Development ECE 478\OPENCVTEST\OPENCVTEST\OPENCVTEST.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /I..\..\opencv\build\include /ZI /nologo /W3 /WX- /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt Source1.cpp
+         Source1.cpp
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(92): warning C4101: 'TrackbarNamepink': unreferenced local variable
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(52): warning C4101: 'TrackbarNamered': unreferenced local variable
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(79): warning C4101: 'TrackbarNamegreen': unreferenced local variable
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(65): warning C4101: 'TrackbarNameblue': unreferenced local variable
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(120): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(121): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(153): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(158): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(159): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(244): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(245): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(249): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(250): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(257): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(260): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(267): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(270): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(283): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>d:\development ece 478\opencvtest\opencvtest\source1.cpp(308): warning C4101: 'e': unreferenced local variable
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Development ECE 478\OPENCVTEST\x64\Debug\OPENCVTEST.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\..\opencv\build\x64\vc14\lib opencv_world310d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\Development ECE 478\OPENCVTEST\x64\Debug\OPENCVTEST.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Development ECE 478\OPENCVTEST\x64\Debug\OPENCVTEST.lib" /MACHINE:X64 x64\Debug\Source1.obj
+         OPENCVTEST.vcxproj -> D:\Development ECE 478\OPENCVTEST\x64\Debug\OPENCVTEST.exe
+     1>Done Building Project "D:\Development ECE 478\OPENCVTEST\OPENCVTEST\OPENCVTEST.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.94
