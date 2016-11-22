@@ -157,71 +157,77 @@ def Client_send(msm_string):
     s.close()
 
 
-def CreateCommandTarget(Directional,CommandDelegate,CommandList):
+def CreateCommandTarget(Dir,Com_Del,Com_List):
     global count
-    CommandSendBatch = []
-    if not CommandDelegate:
-        CommandDelegate.append(Directional)                             #list is empty, add to list
-        
-    elif len(CommandDelegate) == 1:
-        CommandDelegate.insert(0, Directional)                          #list has only one, add new direction at beginning
-        
-    elif len(CommandDelegate) == 2:
-        CommandDelegate.insert(0, Directional)                          #list is full.  Insert and shift, remove last entry
-        del CommandDelegate[2]
+    msm = ""
+    if not Com_Del:
+        Com_Del.append(Dir)                             #list is empty, add to list [cur, prev]
+        return
+    elif len(Com_Del) == 1:
+        Com_Del.insert(0,Dir)
+    else:
+        Com_Del.insert(0,Dir)
+        Com_Del.pop(2)
 
-    print "Current command, previous command is: ",CommandDelegate      #print debug statement
-    #Direction move right
-    if Directional == 0:
-        count += 1 
-        CommandSendBatch.append(CommandList[0])
-        CommandSendBatch.append(CommandList[2])
-    
-    #Direction move up right    
-    elif Directional == 1:
+    print Com_Del
+    c = Com_Del[0]
+    p = Com_Del[1]
+    if ( c == p ):
         count += 1
-        CommandSendBatch.append(CommandList[0])
-        CommandSendBatch.append(CommandList[1])
-        
-    #Direction move up
-    elif Directional == 2:
+        msm = "1"
+        print "MoveForward"
+    elif ( p - c == 1 and c != 0):
         count += 1
-        CommandSendBatch.append(CommandList[0])
-        CommandSendBatch.append(CommandList[4])
+        print "Turn left 45, Move forward"
+        msm = "2 45"                          
+    elif ( p - c == 2 and c != 0):
+        count += 1
+        print "Turn left 90, Move forward"
+        msm = "2 90"                          
+    elif ( p - c == 3 and c != 0):
+        count += 1
+        print "Turn left 135, Move forward"
+        msm = "2 135" 
+    elif ( c - p == 1 and c != 0):
+        count += 1
+        print "Turn right 45, Move forward"
+        msm = "2 -45"                          
+    elif ( c - p == 2 and c != 0):
+        count += 1
+        print "Turn right 90, Move forward"
+        msm = "2 -90"                          
+    elif ( c - p == 3 and c != 0):
+        count += 1
+        print "Turn right 135, Move forward"
+        msm = "2 -135" 
+    elif ( c == 0 and p == 7) or (p == 0 and c == 1):
+        count += 1
+        print "Turn right 45, Move forward"
+        msm = "2 -45"
+    elif ( c == 0 and p == 6) or (p == 0 and c == 2):
+        count += 1
+        print "Turn right 90, Move forward"
+        msm = "2 -90"
+    elif ( c == 0 and p == 5) or (p == 0 and c == 3):
+        count += 1
+        print "Turn right 135, Move forward"
+        msm = "2 -135"
+    elif ( c == 0 and p == 1) or (p == 0 and c == 7):
+        count += 1
+        print "Turn left 45, Move forward"
+        msm = "2 45"
+    elif ( c == 0 and p == 2) or (p == 0 and c == 6):
+        count += 1
+        print "Turn left 90, Move forward"
+        msm = "2 90"
+    elif ( c == 0 and p == 3) or (p == 0 and c == 5):
+        count += 1
+        print "Turn left 135, Move forward"
+        msm = "2 135"
 
-    #Direction move up left    
-    elif Directional == 3:
-        count += 1
-        CommandSendBatch.append(CommandList[0])
-        CommandSendBatch.append(CommandList[3])
-    #Direction move left
-    elif Directional == 4:
-        count += 1
-        CommandSendBatch.append(CommandList[0])
-        CommandSendBatch.append(CommandList[2])
-
-    #Direction move down left
-    elif Directional == 5:
-        count += 1
-        CommandSendBatch.append(CommandList[0])
-        CommandSendBatch.append(CommandList[6])
-
-    #Direction move down
-    elif Directional == 6:
-        count += 1
-        CommandSendBatch.append(CommandList[0])
-        CommandSendBatch.append(CommandList[3])
-        
-    #Direction move down right
-    elif Directional == 7:
-        count += 1
-        CommandSendBatch.append(CommandList[0])
-        CommandSendBatch.append(CommandList[4])
-
-    print count
-    print CommandSendBatch
-    msg = ','.join(CommandSendBatch)
-    Client_send(msg)                                       #send commands to UDP delegation
+    #print count
+    print msm
+    Client_send(msm)                                       #send commands to UDP delegation
 
 
 
@@ -263,32 +269,32 @@ def Main():
     print 'Start: ', xA, yA
     print 'Finish: ', xB, yB
 
-    while (xA != xB and yA != yB):
-        # Actual Running A Star Algorithm
-        t = time.time()
-        route = pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB)
-        print 'Time to generate the route (seconds): ', time.time() - t
-        print 'Route:'
-        print route
-        
-        # mark the route on the map
-        if len(route) > 0:
-            x = xA
-            y = yA
-            the_map[y][x] = 2
-            for i in range(len(route)):
-                j = int(route[i])
-                x += dx[j]
-                y += dy[j]
-                the_map[y][x] = 3
-                #print 'currnt direction:' , j
-                CreateCommandTarget(j,CommandDelegate,CommandList) 
-            the_map[y][x] = 4
+    #while (xA != xB and yA != yB):
+    # Actual Running A Star Algorithm
+    t = time.time()
+    route = pathFind(the_map, n, m, dirs, dx, dy, xA, yA, xB, yB)
+    print 'Time to generate the route (seconds): ', time.time() - t
+    print 'Route:'
+    print route
+    
+    # mark the route on the map
+    if len(route) > 0:
+        x = xA
+        y = yA
+        the_map[y][x] = 2
+        for i in range(len(route)):
+            j = int(route[i])
+            x += dx[j]
+            y += dy[j]
+            the_map[y][x] = 3
+            #print 'currnt direction:' , j
+            CreateCommandTarget(j,CommandDelegate,CommandList) 
+        the_map[y][x] = 4
 
-            draw_map(the_map,m,n)
-            # This will be new robot position fed in from the kinect
-            xA -= 1
-            yA += 1
+        draw_map(the_map,m,n)
+        # This will be new robot position fed in from the kinect
+        #xA -= 1
+        #yA += 1
             
 
 if __name__=="__main__":
