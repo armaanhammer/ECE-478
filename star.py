@@ -161,8 +161,16 @@ def CreateCommandTarget(Directional,CommandDelegate,CommandList):
     global count
     CommandSendBatch = []
     if not CommandDelegate:
-        CommandDelegate.append(Directional)
+        CommandDelegate.append(Directional)                             #list is empty, add to list
         
+    elif len(CommandDelegate) == 1:
+        CommandDelegate.insert(0, Directional)                          #list has only one, add new direction at beginning
+        
+    elif len(CommandDelegate) == 2:
+        CommandDelegate.insert(0, Directional)                          #list is full.  Insert and shift, remove last entry
+        del CommandDelegate[2]
+
+    print "Current command, previous command is: ",CommandDelegate      #print debug statement
     #Direction move right
     if Directional == 0:
         count += 1 
@@ -274,7 +282,7 @@ def Main():
                 y += dy[j]
                 the_map[y][x] = 3
                 #print 'currnt direction:' , j
-                #CreateCommandTarget(j,CommandDelegate,CommandList) 
+                CreateCommandTarget(j,CommandDelegate,CommandList) 
             the_map[y][x] = 4
 
             draw_map(the_map,m,n)
