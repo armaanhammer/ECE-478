@@ -13,26 +13,26 @@ int camera_number = 0;
 int object_found = 0;
 
 //threshold values for hsv
-int H_MIN_red = 255;//0;
-int H_MAX_red = 255;//20;
-int S_MIN_red = 255;//155;
+int H_MIN_red = 0;
+int H_MAX_red = 20;
+int S_MIN_red = 155;
 int S_MAX_red = 255;
-int V_MIN_red = 255;//50;
-int V_MAX_red = 255;//200;
+int V_MIN_red = 50;
+int V_MAX_red = 200;
 
-int H_MIN_blue = 255;//100;
-int H_MAX_blue = 255;//180;
-int S_MIN_blue = 255;//100;
-int S_MAX_blue = 255;//255;
-int V_MIN_blue = 255;//50;
-int V_MAX_blue = 255;//200;
+int H_MIN_blue = 100;
+int H_MAX_blue = 180;
+int S_MIN_blue = 100;
+int S_MAX_blue = 255;
+int V_MIN_blue = 50;
+int V_MAX_blue = 200;
 
-int H_MIN_green = 255;//50;
-int H_MAX_green = 255;//90;
-int S_MIN_green = 255;//100;
-int S_MAX_green = 255;//255;
-int V_MIN_green = 255;//50;
-int V_MAX_green = 255;//200;
+int H_MIN_green = 50;
+int H_MAX_green = 90;
+int S_MIN_green = 100;
+int S_MAX_green = 255;
+int V_MIN_green = 50;
+int V_MAX_green = 200;
 
 int H_MIN_pink = 190;
 int H_MAX_pink = 210;
