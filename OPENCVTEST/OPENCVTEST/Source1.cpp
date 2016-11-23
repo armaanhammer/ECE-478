@@ -146,29 +146,35 @@ void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) 
 	// Approximate contours to polygons + get bounding rects and circles
 	vector<vector<Point> > contours_poly(contours.size());
 	vector<Rect> boundRect(contours.size());
-
+	int i;
 	double refArea = 0;                                                                     
 	bool objectFound = false;
 	if (hierarchy.size() > 0) {
 		int numObjects = hierarchy.size();  //if this is big, we have a noisy image
-		for (int index = 0; index >= 0; index = hierarchy[index][0]) {\
+		for (int index = 0; index >= 0; index = hierarchy[index][0]) {
 			Moments moment = moments((cv::Mat)contours[index]);
-			boundRect[index] = boundingRect(Mat(contours_poly[index])); //use moment?
+			for (i = 0; i < contours.size(); i++) {
+				approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
+				boundRect[i] = boundingRect(Mat(contours_poly[i]));
+			}
 			double area = moment.m00; //area
 			x = moment.m10 / area; //this is where the proram finds the x/y coordinates of the middle of the object
 			y = moment.m01 / area; //this is where the proram finds the x/y coordinates of the middle of the object
+			//int w = boundRect.width;
+			//int h = boundRect.height;
 			objectFound = true;
-			rectangle(cameraFeed, boundRect[index].tl(), boundRect[index].br(), Scalar(0, 255, 0), 2, 8, 0); //tl == top left, br == bottom right
 			refArea = area; 
 		}
 		//let user know you found an object
 		if (objectFound == true) {
-			putText(cameraFeed, "Tracking Object", Point(0, 50), 2, 1, Scalar(0, 255, 0), 2);
+			for (i = 0; i < contours.size(); i++) {
+				rectangle(cameraFeed, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 2, 8, 0); //tl == top left, br == bottom right
+			}
+			putText(cameraFeed, "Tracking Obstacle", Point(0, 50), 2, 1, Scalar(0, 255, 0), 2);
 			circle(cameraFeed, Point(x, y), 10, Scalar(255, 0, 0), 2);
 			object_found = 1;
 		}
 	}
-
  }
 
 int main()
@@ -208,16 +214,6 @@ int main()
 		color = 1;
 		track_object(color, gx, gy, green_threshold, cameraFeed);
 
-		inRange(HSV, Scalar(H_MIN_pink, S_MIN_pink, V_MIN_pink), Scalar(H_MAX_pink, S_MAX_pink, V_MAX_pink), pink_threshold);
-		//erode and dilate to clean up the image
-		Mat erodeElement_pink = getStructuringElement(MORPH_RECT, Size(3, 3));
-		Mat dilateElement_pink = getStructuringElement(MORPH_RECT, Size(8, 8));
-		erode(pink_threshold, pink_threshold, erodeElement);
-		dilate(pink_threshold, pink_threshold, dilateElement);
-		//track the object
-		color = 2;
-		track_obstacle(color, px, py, pink_threshold, cameraFeed);
-
 
 		inRange(HSV, Scalar(H_MIN_blue, S_MIN_blue, V_MIN_blue), Scalar(H_MAX_blue, S_MAX_blue, V_MAX_blue), blue_threshold);
 		//erode and dilate to clean up the image
@@ -238,6 +234,17 @@ int main()
 		//track the object
 		color = 2;
 		track_object(color, rx, ry, red_threshold, cameraFeed);
+
+		inRange(HSV, Scalar(H_MIN_pink, S_MIN_pink, V_MIN_pink), Scalar(H_MAX_pink, S_MAX_pink, V_MAX_pink), pink_threshold);
+		//erode and dilate to clean up the image
+		Mat erodeElement_pink = getStructuringElement(MORPH_RECT, Size(3, 3));
+		Mat dilateElement_pink = getStructuringElement(MORPH_RECT, Size(8, 8));
+		erode(pink_threshold, pink_threshold, erodeElement);
+		dilate(pink_threshold, pink_threshold, dilateElement);
+		//blur(HSV, HSV, Size(3, 3));
+		//track the object
+		color = 2;
+		track_obstacle(color, px, py, pink_threshold, cameraFeed);
 
 		//get distance beween points
 		float a, b, dist_gp;
