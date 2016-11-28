@@ -181,6 +181,8 @@ void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) 
 	// Approximate contours to polygons + get bounding rects and circles
 	vector<vector<Point> > contours_poly(contours.size());
 	vector<Rect> boundRect(contours.size());
+	vector<Point2f>center( contours.size() );
+	vector<float>radius(contours.size());
 	int i;
 	double refArea = 0;                                                                     
 	bool objectFound = false;
@@ -191,6 +193,7 @@ void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) 
 			for (i = 0; i < contours.size(); i++) {
 				approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
 				boundRect[i] = boundingRect(Mat(contours_poly[i]));
+				minEnclosingCircle((Mat)contours_poly[i], center[i], radius[i]);
 			}
 			double area = moment.m00; //area
 			x = moment.m10 / area; //this is where the proram finds the x/y coordinates of the middle of the object
@@ -204,6 +207,7 @@ void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) 
 		if (objectFound == true) {
 			for (i = 0; i < contours.size(); i++) {
 				rectangle(cameraFeed, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 2, 8, 0); //tl == top left, br == bottom right
+				circle(cameraFeed, center[i], (int)radius[i], Scalar(255, 0, 0), 2, 8, 0);
 			}
 			putText(cameraFeed, "Tracking Obstacle", Point(0, 50), 2, 1, Scalar(0, 255, 0), 2);
 			circle(cameraFeed, Point(x, y), 10, Scalar(255, 0, 0), 2);
