@@ -1,5 +1,5 @@
-greenX 0
-greenY 0
+greenX 168
+greenY 159
 pinkX 0
 pinkY 0
 dot1X 0

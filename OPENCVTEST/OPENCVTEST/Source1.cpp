@@ -1,14 +1,3 @@
-#ifdef _DEBUG
-#define _DEBUG_WAS_DEFINED 1
-#undef _DEBUG
-#endif 
-
-#include <Python.h>		//still need to run this in release
-
-#ifdef _DEBUG_WAS_DEFINED
-#define _DEBUG 1
-#endif
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -18,34 +7,10 @@
 //#include <opencv2\opencv.hpp>
 #include <math.h>
 
-
 using namespace std;
 using namespace cv;
 int camera_number = 0;
 int object_found = 0;
-
-const int MAP_WIDTH = 100;		//horizontal test map size
-const int MAP_HEIGHT = 100;		//vertical test map size
-const int Direction = 8;		//number of directions we can travel in
-
-static int closed_node_map[MAP_WIDTH][MAP_HEIGHT]; // map of closed (tried-out) nodes
-static int open_node_map[MAP_WIDTH][MAP_HEIGHT];	// map of open (not-yet-tried) nodes
-static int map[MAP_WIDTH][MAP_HEIGHT];				//n x m
-static int Direction_map[MAP_WIDTH][MAP_HEIGHT];	//map of directionals
-
-
-
-//directionals, this is two seperate arrays that contain pairs of directions for each map.  
-//1 means move positive (right / up) 0 means no move, and -1 means negative (left, down)
-//supported directions in order are:  up, diag up right , up, diag up left, left, diag down left, down, diag down right
-
-//****************************************************************************
-//*   \     |   /      0       1      2      3       4       5       6        7
-//*   <--  []  -->   right, up right, up, up left, left, down left, down, down right 
-//*   /     |   \
-//****************************************************************************
-static int DirectionX[] = { 1, 1, 0,-1,-1,-1, 0, 1 };
-static int DirectionY[] = { 0, 1, 1, 1, 0,-1,-1,-1 };
 
 //threshold values for hsv
 int H_MIN_red = 255;//0;
@@ -216,62 +181,8 @@ void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) 
 	}
  }
 
-void DrawCircle(int StartX, int StartY, int radius)
-{
-	for (int i = StartX - radius; i <= StartX + radius; i++)			//50 - 25, so 25
-	{
-		for (int j = StartY - radius; j <= StartY + radius; j++)		//50 - 25, so 25 .  starts at 25,25
-		{
-			if ((i - StartX)*(i - StartX) + (j - StartY)*(j - StartY) <= radius * radius && ((i >= 0) && (j >= 0) && (i <= MAP_WIDTH - 1) && (j <= MAP_HEIGHT - 1)))
-			{
-				map[i][j] = 1;											//if equation is satisfied AND the i and j do not exceed boundaries of matrix, write 1
-			}
-		}
-	}
-
-}
-
 int main()
 {
-	Py_Initialize();
-	// Create some Python objects that will later be assigned values.
-	PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pWidth, *pHeight, *pDirs, *pxA, *pxB, *pyA, *pyB;
-
-	pName = PyString_FromString("star");						// Convert the file name to a Python string.
-	pModule = PyImport_Import(pName);							// Import the file as a Python module.
-	pDict = PyModule_GetDict(pModule);							// Create a dictionary for the contents of the module.
-	pFunc = PyDict_GetItemString(pDict, "pathFind");					// Get the add method from the dictionary.					
-	pArgs = PyTuple_New(7);										// Create a Python tuple to hold the arguments to the method.
-
-	pWidth = PyInt_FromLong(MAP_WIDTH);
-	pHeight = PyInt_FromLong(MAP_HEIGHT);
-	pDirs = PyInt_FromLong(Direction);
-	pxA = PyInt_FromLong(80);
-	pxB = PyInt_FromLong(45);
-	pyA = PyInt_FromLong(12);
-	pyB = PyInt_FromLong(89);
-
-	// Set the Python int as the first and second arguments to the method.
-	PyTuple_SetItem(pArgs, 0, pWidth);
-	PyTuple_SetItem(pArgs, 1, pHeight);
-	PyTuple_SetItem(pArgs, 2, pDirs);
-	PyTuple_SetItem(pArgs, 3, pxA);
-	PyTuple_SetItem(pArgs, 4, pxB);
-	PyTuple_SetItem(pArgs, 5, pyA);
-	PyTuple_SetItem(pArgs, 6, pyB);
-	// Call the function with the arguments.
-	PyObject* pResult = PyObject_CallObject(pFunc, pArgs);
-	// Print a message if calling the method failed.
-	if (pResult == NULL)
-		printf("Calling the add method failed.\n");
-	// Convert the result to a long from a Python object.
-	string route = PyString_AsString(pResult);
-
-	// Destroy the Python interpreter.
-	Py_Finalize();
-	
-	printf("The result is %s.\n", route); std::cin.ignore(); return 0;
-
 	Mat cameraFeed;
 	Mat HSV;
 	Mat pink_threshold;
@@ -284,9 +195,6 @@ int main()
 	createTrackbars();
 	VideoCapture capture;
 	capture.open(camera_number);
-
-	
-
 
 	int first_loop = 0;  //if the first loop, position the windows, don't do it over and over or I will not be able to drag windows around
 	while (1) {
