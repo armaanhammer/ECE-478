@@ -216,7 +216,7 @@ void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) 
 	}
  }
 
-int main()
+string Call_Pathfinder_PyObject()
 {
 	Py_Initialize();
 	// Create some Python objects that will later be assigned values.
@@ -225,7 +225,7 @@ int main()
 	pName = PyString_FromString("star");						// Convert the file name to a Python string.
 	pModule = PyImport_Import(pName);							// Import the file as a Python module.
 	pDict = PyModule_GetDict(pModule);							// Create a dictionary for the contents of the module.
-	pFunc = PyDict_GetItemString(pDict, "pathFind");					// Get the add method from the dictionary.					
+	pFunc = PyDict_GetItemString(pDict, "pathFind");			// Get the add method from the dictionary.					
 	pArgs = PyTuple_New(7);										// Create a Python tuple to hold the arguments to the method.
 
 	pWidth = PyInt_FromLong(MAP_WIDTH);
@@ -252,10 +252,15 @@ int main()
 	// Convert the result to a long from a Python object.
 	string route = PyString_AsString(pResult);
 	//int result = PyInt_AsLong(pResult);
-	// Destroy the Python interpreter.
+	//Destroy the Python interpreter.
 	Py_Finalize();
 
 	printf("The result is %s.\n", route); std::cin.ignore(); return 0;
+}
+
+int main()
+{
+	
 
 
 	
