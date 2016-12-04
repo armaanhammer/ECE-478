@@ -52,7 +52,9 @@ def pathFind(n, m, dirs, xA, yA, xB, yB):
         open_nodes_map.append(list(row))
         dir_map.append(list(row))                                                           # create empty map
         the_map.append(list(row))
-
+    #write obstacles here
+    
+        
     pq = [[], []]                                                                           # priority queues of open (not-yet-tried) nodes
     pqi = 0                                                                                 # priority queue index
     # create the start node and push into list of open nodes
@@ -126,6 +128,15 @@ def pathFind(n, m, dirs, xA, yA, xB, yB):
                     heappush(pq[pqi], m0)                                                   # add the better node instead
     return ''                                                                               # if no route found
 
+#Draw circles based on start x and y of center and radius
+
+def DrawCircle(StartX, StartY, radius, n, m, the_map):
+    for i in range (StartX - radius, StartX + radius):
+        for j in range (StartY - radius, StartY + radius):
+            if ((i - StartX)* (i - StartX) + (j - StartY)*(j - StartY) <= radius * radius and ((i >= 0) and (j >= 0) and (i <= n-1) and (j <= m-1))): 
+                the_map[i][j] = 1
+
+                
 #UDP client code for sending command
 def Client_send(msm_string):
     host = '127.0.0.1'
@@ -134,9 +145,7 @@ def Client_send(msm_string):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.sendto(msm_string + "\n", (host, port))
     s.close()
-def add(a,b,c,d,e,f,g):
-    return (a*b) + c +((d*e) + (f*g))
-    #return a*b
+
 def CreateCommandTarget(Dir,Com_Del,Com_List):
     global count
     msm = ""
@@ -208,8 +217,6 @@ def CreateCommandTarget(Dir,Com_Del,Com_List):
     #print count
     print msm
     Client_send(msm)                                       #send commands to UDP delegation
-
-
 
 
         

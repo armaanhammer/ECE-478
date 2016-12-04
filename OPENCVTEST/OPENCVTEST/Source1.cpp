@@ -1,13 +1,5 @@
-#ifdef _DEBUG
-#define _DEBUG_WAS_DEFINED 1
-#undef _DEBUG
-#endif 
 
 #include <Python.h>		//still need to run this in release
-
-#ifdef _DEBUG_WAS_DEFINED
-#define _DEBUG 1
-#endif
 
 #include <fstream>
 #include <iostream>
@@ -219,8 +211,9 @@ void track_obstacle(int &color, int &x, int &y, Mat threshold, Mat &cameraFeed) 
 string Call_Pathfinder_PyObject()
 {
 	Py_Initialize();
+	
 	// Create some Python objects that will later be assigned values.
-	PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pWidth, *pHeight, *pDirs, *pxA, *pxB, *pyA, *pyB;
+	PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pObstacles, *pWidth, *pHeight, *pDirs, *pxA, *pxB, *pyA, *pyB;
 
 	pName = PyString_FromString("star");						// Convert the file name to a Python string.
 	pModule = PyImport_Import(pName);							// Import the file as a Python module.
@@ -235,8 +228,12 @@ string Call_Pathfinder_PyObject()
 	pxB = PyInt_FromLong(45);
 	pyA = PyInt_FromLong(12);
 	pyB = PyInt_FromLong(89);
+	pObstacles = PyString_FromString("25,25,6;89,89,4;");
+	//so were gonna send a string to python with the obstacles, since arrays are so goddamn fucky.  pathfinder will disect the small string 
+	//and mark obstacles
 
 	// Set the Python int as the first and second arguments to the method.
+	//PyTuple_SetItem(pArgs, 0, pMapArray);
 	PyTuple_SetItem(pArgs, 0, pWidth);
 	PyTuple_SetItem(pArgs, 1, pHeight);
 	PyTuple_SetItem(pArgs, 2, pDirs);
@@ -244,15 +241,15 @@ string Call_Pathfinder_PyObject()
 	PyTuple_SetItem(pArgs, 4, pxB);
 	PyTuple_SetItem(pArgs, 5, pyA);
 	PyTuple_SetItem(pArgs, 6, pyB);
+	PyTuple_SetItem(pArgs, 7, pObstacles);
+	
 	// Call the function with the arguments.
 	PyObject* pResult = PyObject_CallObject(pFunc, pArgs);
-	// Print a message if calling the method failed.
+	
 	if (pResult == NULL)
 		printf("Calling the add method failed.\n");
 	// Convert the result to a long from a Python object.
-	string route = PyString_AsString(pResult);
-	//int result = PyInt_AsLong(pResult);
-	//Destroy the Python interpreter.
+	string route = PyString_AsString(pResult);						//Destroy the Python interpreter.
 	Py_Finalize();
 
 	printf("The result is %s.\n", route); std::cin.ignore(); return 0;
@@ -260,11 +257,6 @@ string Call_Pathfinder_PyObject()
 
 int main()
 {
-	
-
-
-	
-	
 	Mat cameraFeed;
 	Mat HSV;
 	Mat pink_threshold;
@@ -277,6 +269,8 @@ int main()
 	createTrackbars();
 	VideoCapture capture;
 	capture.open(camera_number);
+
+	Call_Pathfinder_PyObject();
 
 	int first_loop = 0;  //if the first loop, position the windows, don't do it over and over or I will not be able to drag windows around
 	while (1) {
