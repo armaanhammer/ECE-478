@@ -224,24 +224,22 @@ string Call_Pathfinder_PyObject()
 	pWidth = PyInt_FromLong(MAP_WIDTH);
 	pHeight = PyInt_FromLong(MAP_HEIGHT);
 	pDirs = PyInt_FromLong(Direction);
-	pxA = PyInt_FromLong(80);
-	pxB = PyInt_FromLong(45);
-	pyA = PyInt_FromLong(12);
-	pyB = PyInt_FromLong(89);
-	pObstacles = PyString_FromString("25,25,6;89,89,4;");
-	//so were gonna send a string to python with the obstacles, since arrays are so goddamn fucky.  pathfinder will disect the small string 
-	//and mark obstacles
+	pxA = PyInt_FromLong(89);
+	pyA = PyInt_FromLong(5);
+	pxB = PyInt_FromLong(7);
+	pyB = PyInt_FromLong(48);
+	
+	//so were gonna send a string to python
 
 	// Set the Python int as the first and second arguments to the method.
-	//PyTuple_SetItem(pArgs, 0, pMapArray);
+	
 	PyTuple_SetItem(pArgs, 0, pWidth);
 	PyTuple_SetItem(pArgs, 1, pHeight);
 	PyTuple_SetItem(pArgs, 2, pDirs);
 	PyTuple_SetItem(pArgs, 3, pxA);
-	PyTuple_SetItem(pArgs, 4, pxB);
-	PyTuple_SetItem(pArgs, 5, pyA);
+	PyTuple_SetItem(pArgs, 4, pyA);
+	PyTuple_SetItem(pArgs, 5, pxB);
 	PyTuple_SetItem(pArgs, 6, pyB);
-	PyTuple_SetItem(pArgs, 7, pObstacles);
 	
 	// Call the function with the arguments.
 	PyObject* pResult = PyObject_CallObject(pFunc, pArgs);
@@ -252,8 +250,9 @@ string Call_Pathfinder_PyObject()
 	string route = PyString_AsString(pResult);						//Destroy the Python interpreter.
 	Py_Finalize();
 
-	printf("The result is %s.\n", route); std::cin.ignore(); return 0;
+	return route;
 }
+
 
 int main()
 {
@@ -270,7 +269,8 @@ int main()
 	VideoCapture capture;
 	capture.open(camera_number);
 
-	Call_Pathfinder_PyObject();
+	string GetRoute = Call_Pathfinder_PyObject();
+	
 
 	int first_loop = 0;  //if the first loop, position the windows, don't do it over and over or I will not be able to drag windows around
 	while (1) {

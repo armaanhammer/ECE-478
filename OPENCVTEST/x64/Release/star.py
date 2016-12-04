@@ -38,7 +38,7 @@ class node:
 
 # A-star algorithm.
 # The path returned will be a string of digits of directions.
-def pathFind(n, m, dirs, xA, yA, xB, yB):
+def pathFind(n, m, dirs, xA, yA, xB, yB):#, obstacle_string):
     #global the_map
     dx = [1, 1, 0, -1, -1, -1, 0, 1]
     dy = [0, 1, 1, 1, 0, -1, -1, -1]
@@ -52,9 +52,21 @@ def pathFind(n, m, dirs, xA, yA, xB, yB):
         open_nodes_map.append(list(row))
         dir_map.append(list(row))                                                           # create empty map
         the_map.append(list(row))
+
+    obstacle_string = "12,34,6;23,43,8;23,65,9"
+    #print obstacle_string
     #write obstacles here
+    obstacle_list = obstacle_string.split(';')          # Break string into two lists
     
-        
+    
+    for i in range(len(obstacle_list)):                 # Access individual elements within the obstacle list
+        obs_list = obstacle_list[i].strip()
+        item = obs_list.split(',')
+        print item
+        #for j in item:
+            #print j.strip
+        DrawCircle(int(item[0]),int(item[1]),int(item[2]),n,m, the_map)  #mark the map
+
     pq = [[], []]                                                                           # priority queues of open (not-yet-tried) nodes
     pqi = 0                                                                                 # priority queue index
     # create the start node and push into list of open nodes
@@ -62,6 +74,7 @@ def pathFind(n, m, dirs, xA, yA, xB, yB):
     n0.updatePriority(xB, yB)
     heappush(pq[pqi], n0)
     open_nodes_map[yA][xA] = n0.priority                                                    # mark it on the open nodes map
+    
 
     # A* search
     while len(pq[pqi]) > 0:
@@ -87,6 +100,41 @@ def pathFind(n, m, dirs, xA, yA, xB, yB):
                 path = c + path
                 x += dx[j]
                 y += dy[j]
+
+
+            
+            # mark the route on the map
+            if len(path) > 0:
+                x = xA
+                y = yA
+                the_map[y][x] = 2
+                for i in range(len(path)):
+                    j = int(path[i])
+                    x += dx[j]
+                    y += dy[j]
+                    the_map[y][x] = 3
+                    #print 'currnt direction:' , j
+                    #CreateCommandTarget(j,CommandDelegate,CommandList) 
+                the_map[y][x] = 4
+        
+            print 'Map:'
+            for y in range(m):
+                for x in range(n):
+                    xy = the_map[y][x]
+                    if xy == 0:
+                        print '.', # space
+                    elif xy == 1:
+                        print 'O', # obstacle
+                    elif xy == 2:
+                        print 'S', # start
+                    elif xy == 3:
+                        print 'R', # route
+                    elif xy == 4:
+                        print 'F', # finish
+                print
+
+
+
             return path
 
         # generate moves (child nodes) in all possible dirs
@@ -213,11 +261,12 @@ def CreateCommandTarget(Dir,Com_Del,Com_List):
         count += 1
         print "Turn left 135, Move forward"
         msm = "2 135"
-
-    #print count
     print msm
     Client_send(msm)                                       #send commands to UDP delegation
 
+
+#def draw_map(the_map,m,n):
+    
 
         
 # MAIN
@@ -225,7 +274,7 @@ def Main():
     global count
     global dx
     global dy
-    #global the_map
+    global the_map
     count = 0
     dirs = 8                                                                # number of possible directions to move on the map
     dx = [1, 1, 0, -1, -1, -1, 0, 1]
@@ -233,9 +282,9 @@ def Main():
 
 
     # 0 = right, 1 = down right , 2 = down, 3 = down-left , 4 = left, 5 = up-left, 6 = up, 7 = Up-right
-    n = 50                                                                 # horizontal size of the map
-    m = 50                                                                 # vertical size of the map
-    #the_map = []
+    n = 100                                                                 # horizontal size of the map
+    m = 100                                                                # vertical size of the map
+    the_map = []
     row = [0] * n
     CommandDelegate = []
     CommandList = ['MOVE_FORWARD', 'MOVE_TURNLEFT', 'MOVE_TURNRIGHT', 'MOVE_BACK', 'WALK_READY', 'WALK_SLOW', 'WALK_FAST']
@@ -244,8 +293,8 @@ def Main():
     # Defined start location for robot and destination
     global xA
     global yA
-    (xA, yA) = (40, 5)          # robot position
-    (xB, yB) = (7, 15)          # Final Destination
+    (xA, yA) = (89, 5)          # robot position
+    (xB, yB) = (7, 48)          # Final Destination
 
     print 'Map size (X,Y): ', n, m
     print 'Start: ', xA, yA
@@ -253,27 +302,44 @@ def Main():
 
     #while (xA != xB and yA != yB):
     # Actual Running A Star Algorithm
+    
     t = time.time()
+    string_list = "12,34,6;23,43,8;23,65,9"
     route = pathFind(n, m, dirs, xA, yA, xB, yB)
     print 'Time to generate the route (seconds): ', time.time() - t
     print 'Route:'
     print route
     
     # mark the route on the map
-    #if len(route) > 0:
-    #    x = xA
-    #    y = yA
-    #    the_map[y][x] = 2
-    #    for i in range(len(route)):
-    #        j = int(route[i])
-    #        x += dx[j]
-    #        y += dy[j]
-    #        the_map[y][x] = 3
-            #print 'currnt direction:' , j
-    #        CreateCommandTarget(j,CommandDelegate,CommandList) 
-    #    the_map[y][x] = 4
+##    if len(route) > 0:
+##        x = xA
+##        y = yA
+##        the_map[y][x] = 2
+##        for i in range(len(route)):
+##            j = int(route[i])
+##            x += dx[j]
+##            y += dy[j]
+##            the_map[y][x] = 3
+##            #print 'currnt direction:' , j
+##            #CreateCommandTarget(j,CommandDelegate,CommandList) 
+##        the_map[y][x] = 4
+##
+##    print 'Map:'
+##    for y in range(m):
+##        for x in range(n):
+##            xy = the_map[y][x]
+##            if xy == 0:
+##                print '.', # space
+##            elif xy == 1:
+##                print 'O', # obstacle
+##            elif xy == 2:
+##                print 'S', # start
+##            elif xy == 3:
+##                print 'R', # route
+##            elif xy == 4:
+##                print 'F', # finish
+##        print
 
-        #draw_map(the_map,m,n)
         # This will be new robot position fed in from the kinect
         #xA -= 1
         #yA += 1
