@@ -1,1 +1,1 @@
-# ECE-478
+This is a fork from https://github.com/Salyhakkoum/ECE-478 which is an object-detection system. Our variant uses the object detection to control a Viking Bot. Our eventual goal is to be able to control an HROS1 humanoid robot instead. The class we are working on this for is ECE-478 at Portland State University.
